@@ -2,6 +2,47 @@
    ProfilePage.css — uses app-wide CSS variables from theme.css
    ============================================================ */
 
+@keyframes profileFadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes profilePanelIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes profileAvatarPop {
+  0%   { opacity: 0; transform: scale(0.6) rotate(-8deg); }
+  60%  { transform: scale(1.06) rotate(2deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes profileRingPulse {
+  0%   { box-shadow: 0 0 0 0 var(--color-accent-ring, rgba(59, 130, 246, 0.35)); }
+  70%  { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+}
+
+@keyframes profileCheckPop {
+  0%   { opacity: 0; transform: scale(0.5); }
+  60%  { opacity: 1; transform: scale(1.15); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes profileShine {
+  0%   { transform: translateX(-120%) skewX(-15deg); }
+  100% { transform: translateX(220%) skewX(-15deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
 .profile-page {
   padding: 40px;
   max-width: 680px;
@@ -18,14 +59,27 @@
   padding: 24px;
   background: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
-  border-radius: 12px;
+  border-radius: 14px;
+  animation: profileFadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.profile-header:hover {
+  box-shadow: 0 10px 24px -12px rgba(0, 0, 0, 0.18);
+  transform: translateY(-1px);
+}
+
+.profile-avatar-wrap {
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: profileRingPulse 2.6s ease-out 0.6s 2;
 }
 
 .profile-avatar {
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: var(--color-accent);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover, #2563eb));
   color: #fff;
   display: flex;
   align-items: center;
@@ -33,6 +87,17 @@
   font-size: 22px;
   font-weight: 700;
   flex-shrink: 0;
+  letter-spacing: 0.02em;
+  animation: profileAvatarPop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.profile-avatar-wrap:hover .profile-avatar {
+  transform: scale(1.06) rotate(-2deg);
+}
+
+.profile-header__info {
+  animation: profileFadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
 }
 
 .profile-header__name {
@@ -50,16 +115,37 @@
 
 /* ── Tab bar ─────────────────────────────────────────────── */
 .profile-tabs {
+  position: relative;
   display: flex;
   gap: 4px;
   margin-bottom: 28px;
   background: var(--color-tab-bar, #f3f4f6);
   padding: 4px;
   border-radius: 10px;
+  animation: profileFadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+}
+
+.profile-tabs__indicator {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  bottom: 4px;
+  width: calc((100% - 8px) / 3);
+  background: var(--color-bg-primary, #fff);
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transition: transform 0.32s cubic-bezier(0.65, 0, 0.35, 1);
+  z-index: 0;
 }
 
 .profile-tab {
+  position: relative;
+  z-index: 1;
   flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   padding: 9px 12px;
   border: none;
   border-radius: 8px;
@@ -68,13 +154,28 @@
   font-weight: 500;
   background: transparent;
   color: var(--color-text-secondary);
-  transition: all 0.15s;
+  transition: color 0.2s ease, transform 0.15s ease;
+}
+
+.profile-tab:hover {
+  color: var(--color-text-primary);
+}
+
+.profile-tab:active {
+  transform: scale(0.97);
 }
 
 .profile-tab--active {
-  background: var(--color-bg-primary, #fff);
   color: var(--color-accent);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.profile-tab__icon {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.profile-tab--active .profile-tab__icon {
+  transform: scale(1.15) rotate(-4deg);
 }
 
 /* ── Content card ────────────────────────────────────────── */
@@ -83,6 +184,13 @@
   border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 28px;
+  animation: profileFadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.16s both;
+  transition: box-shadow 0.25s ease;
+  overflow: hidden;
+}
+
+.profile-tab-panel {
+  animation: profilePanelIn 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .profile-section-title {
@@ -112,6 +220,8 @@
 /* ── Form field ──────────────────────────────────────────── */
 .profile-field {
   margin-bottom: 20px;
+  animation: profilePanelIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--field-delay, 0ms);
 }
 
 .profile-field__label {
@@ -122,6 +232,7 @@
   margin-bottom: 6px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  transition: color 0.2s ease;
 }
 
 .profile-field__input,
@@ -137,19 +248,37 @@
   outline: none;
   box-sizing: border-box;
   font-family: inherit;
-  transition: border-color 0.15s;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.profile-field__input:hover,
+.profile-field__select:hover,
+.profile-field__textarea:hover {
+  border-color: var(--color-text-muted, #9ca3af);
 }
 
 .profile-field__input:focus,
 .profile-field__select:focus,
 .profile-field__textarea:focus {
   border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-ring, rgba(59, 130, 246, 0.15));
+}
+
+.profile-field:has(.profile-field__input:focus) .profile-field__label,
+.profile-field:has(.profile-field__select:focus) .profile-field__label,
+.profile-field:has(.profile-field__textarea:focus) .profile-field__label {
+  color: var(--color-accent);
 }
 
 .profile-field__input--readonly {
   color: var(--color-text-muted, #9ca3af);
   background: var(--color-bg-secondary);
   cursor: default;
+}
+
+.profile-field__input--readonly:focus {
+  box-shadow: none;
+  border-color: var(--color-border);
 }
 
 .profile-field__select {
@@ -162,6 +291,9 @@
 
 /* ── Info hint box ───────────────────────────────────────── */
 .profile-info-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding: 12px 16px;
   background: var(--color-accent-bg, #eff6ff);
   border: 1px solid var(--color-accent-border, #bfdbfe);
@@ -169,6 +301,12 @@
   font-size: 12px;
   color: var(--color-accent-text, #1d4ed8);
   margin-bottom: 4px;
+  animation: profilePanelIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+}
+
+.profile-info-box__icon {
+  display: inline-block;
+  animation: profileAvatarPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
 }
 
 /* ── Save row ────────────────────────────────────────────── */
@@ -180,25 +318,63 @@
 }
 
 .profile-save-btn {
+  position: relative;
+  overflow: hidden;
   padding: 10px 28px;
-  background: var(--color-accent);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover, #2563eb));
   color: #fff;
   border: none;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.profile-save-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0) 100%);
+  transform: translateX(-120%) skewX(-15deg);
 }
 
 .profile-save-btn:hover {
-  background: var(--color-accent-hover, #2563eb);
+  box-shadow: 0 6px 16px -6px var(--color-accent-ring, rgba(59, 130, 246, 0.5));
+  transform: translateY(-1px);
+}
+
+.profile-save-btn:hover::before {
+  animation: profileShine 0.9s ease;
+}
+
+.profile-save-btn:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .profile-save-success {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 13px;
   color: var(--color-success, #16a34a);
   font-weight: 500;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.profile-save-success--show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.profile-save-success__check {
+  color: var(--color-success, #16a34a);
+  animation: profileCheckPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
 /* ============================================================
@@ -234,5 +410,13 @@
   .profile-tab {
     font-size: 12px;
     padding: 8px 6px;
+  }
+
+  .profile-tab__label {
+    display: none;
+  }
+
+  .profile-tab__icon {
+    font-size: 16px;
   }
 }

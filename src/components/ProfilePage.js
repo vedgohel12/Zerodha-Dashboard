@@ -33,7 +33,7 @@ const ProfilePage = ({ user }) => {
 
   const showSaved = () => {
     setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    setTimeout(() => setSaved(false), 2200);
   };
 
   const tabs = [
@@ -42,13 +42,15 @@ const ProfilePage = ({ user }) => {
     { key: "nominee", label: "Nominee", icon: "👥" },
   ];
 
+  const activeIndex = tabs.findIndex((t) => t.key === activeTab);
+
   // isMobile check for hiding email field
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 640;
 
-  const Field = ({ label, type = "text", value, onChange, placeholder, readOnly, hideOnMobile }) => {
+  const Field = ({ label, type = "text", value, onChange, placeholder, readOnly, hideOnMobile, delay = 0 }) => {
     if (hideOnMobile && isMobile) return null;
     return (
-      <div className="profile-field">
+      <div className="profile-field" style={{ "--field-delay": `${delay}ms` }}>
         <label className="profile-field__label">{label}</label>
         <input
           type={type}
@@ -62,8 +64,8 @@ const ProfilePage = ({ user }) => {
     );
   };
 
-  const SelectField = ({ label, value, onChange, options }) => (
-    <div className="profile-field">
+  const SelectField = ({ label, value, onChange, options, delay = 0 }) => (
+    <div className="profile-field" style={{ "--field-delay": `${delay}ms` }}>
       <label className="profile-field__label">{label}</label>
       <select
         value={value}
@@ -80,9 +82,15 @@ const ProfilePage = ({ user }) => {
   const SaveButton = ({ onClick }) => (
     <div className="profile-save-row">
       <button className="profile-save-btn" onClick={onClick}>
-        Save Changes
+        <span>Save Changes</span>
       </button>
-      {saved && <span className="profile-save-success">✓ Saved successfully</span>}
+      <span className={`profile-save-success${saved ? " profile-save-success--show" : ""}`}>
+        <svg className="profile-save-success__check" viewBox="0 0 24 24" width="16" height="16">
+          <circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" strokeWidth="2" />
+          <path d="M7 12.5l3.2 3.2L17 9" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        Saved successfully
+      </span>
     </div>
   );
 
@@ -91,7 +99,9 @@ const ProfilePage = ({ user }) => {
 
       {/* Header — hidden on mobile via CSS */}
       <div className="profile-header">
-        <div className="profile-avatar">{initials}</div>
+        <div className="profile-avatar-wrap">
+          <div className="profile-avatar">{initials}</div>
+        </div>
         <div className="profile-header__info">
           <p className="profile-header__name">{user?.fullName || "User"}</p>
           <p className="profile-header__email">{user?.email}</p>
@@ -100,13 +110,21 @@ const ProfilePage = ({ user }) => {
 
       {/* Tabs */}
       <div className="profile-tabs">
+        <div
+          className="profile-tabs__indicator"
+          style={{
+            transform: `translateX(${activeIndex * 100}%)`,
+            width: `${100 / tabs.length}%`,
+          }}
+        />
         {tabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
             className={`profile-tab${activeTab === tab.key ? " profile-tab--active" : ""}`}
           >
-            {tab.icon} {tab.label}
+            <span className="profile-tab__icon">{tab.icon}</span>
+            <span className="profile-tab__label">{tab.label}</span>
           </button>
         ))}
       </div>
@@ -116,7 +134,7 @@ const ProfilePage = ({ user }) => {
 
         {/* Personal Info */}
         {activeTab === "personal" && (
-          <div>
+          <div key="personal" className="profile-tab-panel">
             <h3 className="profile-section-title">Personal Information</h3>
             <div className="profile-grid">
               <div className="profile-grid__full">
@@ -125,6 +143,7 @@ const ProfilePage = ({ user }) => {
                   value={personal.fullName}
                   onChange={(v) => setPersonal({ ...personal, fullName: v })}
                   placeholder="Enter your full name"
+                  delay={0}
                 />
               </div>
               {/* Email — hidden on mobile */}
@@ -136,6 +155,7 @@ const ProfilePage = ({ user }) => {
                 placeholder="Email address"
                 readOnly
                 hideOnMobile
+                delay={40}
               />
               <Field
                 label="Phone"
@@ -143,17 +163,20 @@ const ProfilePage = ({ user }) => {
                 value={personal.phone}
                 onChange={(v) => setPersonal({ ...personal, phone: v })}
                 placeholder="10 digit mobile number"
+                delay={80}
               />
               <Field
                 label="Date of Birth"
                 type="date"
                 value={personal.dob}
                 onChange={(v) => setPersonal({ ...personal, dob: v })}
+                delay={120}
               />
               <SelectField
                 label="Gender"
                 value={personal.gender}
                 onChange={(v) => setPersonal({ ...personal, gender: v })}
+                delay={160}
                 options={[
                   { value: "", label: "Select gender" },
                   { value: "male", label: "Male" },
@@ -162,7 +185,7 @@ const ProfilePage = ({ user }) => {
                 ]}
               />
               <div className="profile-grid__full">
-                <div className="profile-field">
+                <div className="profile-field" style={{ "--field-delay": "200ms" }}>
                   <label className="profile-field__label">Address</label>
                   <textarea
                     value={personal.address}
@@ -180,7 +203,7 @@ const ProfilePage = ({ user }) => {
 
         {/* KYC & Bank */}
         {activeTab === "kyc" && (
-          <div>
+          <div key="kyc" className="profile-tab-panel">
             <h3 className="profile-section-title">KYC & Bank Details</h3>
             <p className="profile-section-subtitle">These details are sensitive. Please keep them secure.</p>
             <Field
@@ -188,21 +211,25 @@ const ProfilePage = ({ user }) => {
               value={kyc.pan}
               onChange={(v) => setKyc({ ...kyc, pan: v.toUpperCase() })}
               placeholder="ABCDE1234F"
+              delay={0}
             />
             <Field
               label="Bank Account Number"
               value={kyc.bankAccount}
               onChange={(v) => setKyc({ ...kyc, bankAccount: v })}
               placeholder="Enter account number"
+              delay={40}
             />
             <Field
               label="IFSC Code"
               value={kyc.ifsc}
               onChange={(v) => setKyc({ ...kyc, ifsc: v.toUpperCase() })}
               placeholder="SBIN0001234"
+              delay={80}
             />
             <div className="profile-info-box">
-              💡 PAN format: 5 letters + 4 digits + 1 letter (e.g. ABCDE1234F)
+              <span className="profile-info-box__icon">💡</span>
+              PAN format: 5 letters + 4 digits + 1 letter (e.g. ABCDE1234F)
             </div>
             <SaveButton onClick={() => { console.log("KYC saved:", kyc); showSaved(); }} />
           </div>
@@ -210,7 +237,7 @@ const ProfilePage = ({ user }) => {
 
         {/* Nominee */}
         {activeTab === "nominee" && (
-          <div>
+          <div key="nominee" className="profile-tab-panel">
             <h3 className="profile-section-title">Nominee Details</h3>
             <p className="profile-section-subtitle">
               Your nominee will receive your investments in case of an unfortunate event.
@@ -220,11 +247,13 @@ const ProfilePage = ({ user }) => {
               value={nominee.nomineeName}
               onChange={(v) => setNominee({ ...nominee, nomineeName: v })}
               placeholder="Enter nominee's full name"
+              delay={0}
             />
             <SelectField
               label="Relationship with Nominee"
               value={nominee.nomineeRelation}
               onChange={(v) => setNominee({ ...nominee, nomineeRelation: v })}
+              delay={40}
               options={[
                 { value: "", label: "Select relationship" },
                 { value: "spouse", label: "Spouse" },
@@ -243,6 +272,7 @@ const ProfilePage = ({ user }) => {
               value={nominee.nomineePhone}
               onChange={(v) => setNominee({ ...nominee, nomineePhone: v })}
               placeholder="Enter nominee's mobile number"
+              delay={80}
             />
             <SaveButton onClick={() => { console.log("Nominee saved:", nominee); showSaved(); }} />
           </div>
