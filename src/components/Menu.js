@@ -6,18 +6,15 @@ const NAV_LINKS = [
   { to: "/", label: "Dashboard" },
   { to: "/orders", label: "Orders" },
   { to: "/holdings", label: "Holdings" },
-  { to: "/positions", label: "Positions" },
   { to: "/funds", label: "Funds" },
-  { to: "/apps", label: "Apps" },
+  // Apps removed from navigation
 ];
 
 const MOB_ICONS = {
   "/": <path d="M3 11.5 12 4l9 7.5M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9" />,
   "/orders": <><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></>,
   "/holdings": <path d="M3 7h18v12H3zM8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18" />,
-  "/positions": <path d="M3 17 9 11l4 4 8-8M16 9h5v5" />,
   "/funds": <><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></>,
-  "/apps": <path d="M4 4h16v16H4z" />,
   "watchlist": null, // handled separately
 };
 
