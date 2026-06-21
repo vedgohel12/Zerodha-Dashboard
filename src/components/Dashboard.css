@@ -1,4 +1,7 @@
-html, body { height: 100%; }
+html, body, #root {
+  min-height: 100%;
+  overflow-y: auto;
+}
 
 #shell {
   position: fixed;

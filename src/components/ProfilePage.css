@@ -43,12 +43,16 @@
   }
 }
 
+html, body, #root {
+  overflow-y: auto !important;
+  min-height: 100%;
+}
+
 .profile-page {
   padding: 56px 40px 40px;
   padding-top: calc(var(--topbar-h) + var(--nav-h) + 32px);
   max-width: 780px;
   margin: 0 auto;
-  min-height: calc(100vh - calc(var(--topbar-h) + var(--nav-h) + 56px));
   box-sizing: border-box;
 }
 
@@ -188,7 +192,7 @@
   padding: 28px;
   animation: profileFadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.16s both;
   transition: box-shadow 0.25s ease;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .profile-tab-panel {
