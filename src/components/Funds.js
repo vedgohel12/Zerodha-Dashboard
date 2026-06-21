@@ -95,7 +95,8 @@ const Funds = () => {
       });
       rzp.open();
     } catch (err) {
-      setMessage({ type: "error", text: err.response?.data?.error || err.message || "Failed to initiate payment." });
+      const serverMsg = err.response?.data?.error || err.response?.data?.message || (err.response?.data && JSON.stringify(err.response.data));
+      setMessage({ type: "error", text: serverMsg || err.message || "Failed to initiate payment." });
     } finally { setLoading(false); }
   };
 
