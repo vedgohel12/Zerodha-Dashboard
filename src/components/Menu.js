@@ -105,7 +105,7 @@ const Menu = ({ user, indices = [], onOpenWatchlist, watchlistOpen }) => {
 
       {/* ── MOBILE BOTTOM NAV ── */}
       <nav id="mobile-nav">
-        {NAV_LINKS.slice(0, 4).map((link) => (
+        {NAV_LINKS.slice(0, 5).map((link) => (
           <Link
             key={link.to}
             to={link.to}

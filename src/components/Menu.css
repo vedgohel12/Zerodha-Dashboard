@@ -62,23 +62,28 @@
 
   #mobile-nav {
     display: flex;
+    flex-wrap: wrap;
     position: fixed; bottom: 0; left: 0; right: 0;
-    height: var(--mob-nav-h);
+    min-height: var(--mob-nav-h);
+    padding: 8px 10px;
     background: var(--surface);
     border-top: 1px solid var(--border);
     z-index: 200;
-    justify-content: space-around; align-items: center;
+    justify-content: space-between;
+    gap: 6px;
   }
 
   .mob-nav-item {
+    flex: 1 1 0;
     display: flex; flex-direction: column; align-items: center;
-    gap: 3px; color: var(--text-dim); font-size: 10px;
-    padding: 6px 8px; border-radius: 8px;
+    gap: 3px; color: var(--text-dim); font-size: 9px;
+    padding: 6px 6px; border-radius: 8px;
     text-decoration: none;
     /* reset button styles for watchlist button */
     background: none; border: none; cursor: pointer; font-family: inherit;
+    min-width: 0;
   }
-  .mob-nav-item svg { width: 20px; height: 20px; }
+  .mob-nav-item svg { width: 18px; height: 18px; }
   .mob-nav-item.active { color: var(--accent); }
 
   /* Watchlist button specific */
