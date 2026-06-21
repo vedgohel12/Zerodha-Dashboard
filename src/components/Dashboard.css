@@ -1,86 +1,367 @@
-html, body, #root {
-  min-height: 100%;
-  overflow-y: auto;
-}
-
-#shell {
-  position: fixed;
-  top: calc(var(--topbar-h) + var(--nav-h));
-  left: 0; right: 0; bottom: 0;
-  display: flex;
-  overflow: hidden;
-}
-
-#watchlist {
-  width: var(--watch-w, 300px);
-  flex-shrink: 0;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  overflow-y: auto;
-}
-
-#main {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  padding: 16px;
+.dash {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.text-green { color: var(--green); }
+.text-red { color: var(--red); }
+.text-accent { color: var(--accent); }
+.text-dim { color: var(--text-dim); }
+.mono { font-family: var(--font-mono); }
+
+/* ── Top summary strip ───────────────────────────────────── */
+.dash-topline {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  font-size: 12.5px;
+  color: var(--text-dim);
+  padding: 0 2px;
+}
+
+.dash-topline strong {
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.dash-topline__sep {
+  width: 1px;
+  height: 12px;
+  background: var(--border);
+}
+
+/* ── Stat cards ───────────────────────────────────────────── */
+.dash-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.dash-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+}
+
+.dash-card:hover {
+  box-shadow: 0 6px 18px -10px rgba(0,0,0,.18);
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--accent) 25%, var(--border));
+}
+
+.dash-card__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+
+.dash-card__val {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.dash-card__sub {
+  font-size: 11.5px;
+  margin-top: 6px;
+}
+
+/* ── Mid section: chart + recent orders ──────────────────── */
+.dash-mid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 14px;
   align-items: stretch;
 }
 
-/* ── Laptop large (>1200px) ── */
-@media (min-width: 1201px) {
-  :root { --watch-w: 300px; }
+.dash-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
 }
 
-/* ── Laptop medium (901px–1200px) ── */
-@media (max-width: 1200px) {
-  :root { --watch-w: 270px; }
+.dash-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
 }
 
-/* ── Tablet (≤900px) ── */
-@media (max-width: 900px) {
-  :root { --watch-w: 230px; }
+.dash-panel__title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
 }
 
-/* ── Mobile (≤640px) ── */
-@media (max-width: 640px) {
-  :root { --topbar-h: 48px; --nav-h: 0px; }
+.dash-panel__link {
+  font-size: 12px;
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 500;
+}
 
-  #shell {
-    top: var(--topbar-h);
-    bottom: var(--mob-nav-h, 56px);
-    flex-direction: column;
-    overflow: visible;
+.dash-panel__link:hover {
+  text-decoration: underline;
+}
+
+.dash-panel__meta {
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+
+/* ── Chart ───────────────────────────────────────────────── */
+.dash-range {
+  display: flex;
+  gap: 4px;
+  background: var(--muted);
+  border-radius: 7px;
+  padding: 3px;
+}
+
+.dash-range__btn {
+  border: none;
+  background: transparent;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-dim);
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+
+.dash-range__btn:hover {
+  color: var(--text);
+}
+
+.dash-range__btn--active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.dash-chart__body {
+  height: 220px;
+}
+
+.dash-chart__svg {
+  width: 100%;
+  height: 100%;
+}
+
+.dash-chart__line {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.08));
+}
+
+/* ── Recent orders ───────────────────────────────────────── */
+.dash-orders__list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.ord-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ord-row:last-child {
+  border-bottom: none;
+}
+
+.ord-row__left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ord-row__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.ord-row__qty {
+  width: 100%;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.ord-mode {
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  letter-spacing: .03em;
+}
+
+.ord-mode--buy {
+  background: rgba(22,163,74,.12);
+  color: var(--green);
+}
+
+.ord-mode--sell {
+  background: rgba(220,38,38,.12);
+  color: var(--red);
+}
+
+.ord-row__right {
+  text-align: right;
+}
+
+.ord-status {
+  font-size: 10.5px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.ord-status--complete { color: var(--green); }
+.ord-status--pending { color: #d97706; }
+.ord-status--rejected { color: var(--red); }
+
+/* ── Holdings panel ──────────────────────────────────────── */
+.dash-tabs {
+  display: flex;
+  gap: 18px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+
+.dash-tabs__btn {
+  border: none;
+  background: transparent;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-dim);
+  padding: 8px 2px;
+  cursor: pointer;
+  position: relative;
+  transition: color .15s ease;
+}
+
+.dash-tabs__btn:hover {
+  color: var(--text);
+}
+
+.dash-tabs__btn--active {
+  color: var(--accent);
+}
+
+.dash-tabs__btn--active::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+.dash-table-wrap {
+  overflow-x: auto;
+  margin-top: 10px;
+}
+
+.dash-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.dash-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--text-dim);
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.dash-table td {
+  padding: 11px 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.dash-table tbody tr:hover {
+  background: var(--muted);
+}
+
+.dash-table__symbol {
+  font-weight: 700;
+}
+
+.dash-table th:not(:first-child),
+.dash-table td:not(:first-child) {
+  text-align: right;
+}
+
+.pct-chip {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.pct-chip--up {
+  background: rgba(22,163,74,.1);
+  color: var(--green);
+}
+
+.pct-chip--down {
+  background: rgba(220,38,38,.1);
+  color: var(--red);
+}
+
+.dash-empty {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 12.5px;
+  padding: 28px 0;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .dash-mid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .dash-cards {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  /* Watchlist slides down from top on mobile */
-  #watchlist {
-    width: 100%;
-    flex-shrink: 0;
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-    overflow: hidden;
-    max-height: 0;
-    transition: max-height 0.3s ease;
+  .dash-topline {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .dash-cards {
+    grid-template-columns: 1fr;
   }
 
-  #watchlist.open {
-    max-height: 320px;
-    overflow-y: auto;
-  }
-
-  #main {
-    flex: 1;
-    min-height: calc(100vh - var(--topbar-h) - var(--mob-nav-h) - 20px);
-    padding: 10px;
-    gap: 10px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: calc(var(--mob-nav-h) + 18px);
+  .dash-panel {
+    padding: 14px;
   }
 }
