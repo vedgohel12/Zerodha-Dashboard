@@ -33,6 +33,13 @@ const Dashboard = () => {
   const [range, setRange] = useState("1W");
   const [holdingsFilter, setHoldingsFilter] = useState("all");
   const [loading, setLoading] = useState(true);
+  const [watchlist, setWatchlist] = useState([
+    { id: 1, name: "TCS", price: 3845, change: 2.5, changeAmt: 94 },
+    { id: 2, name: "INFY", price: 1680, change: -1.2, changeAmt: -20 },
+    { id: 3, name: "RELIANCE", price: 2950, change: 3.1, changeAmt: 88 },
+    { id: 4, name: "HDFC", price: 2405, change: -0.8, changeAmt: -19 },
+    { id: 5, name: "ITC", price: 445, change: 1.5, changeAmt: 6.6 },
+  ]);
 
   useEffect(() => {
     let isMounted = true;
@@ -84,8 +91,6 @@ const Dashboard = () => {
   const totalPnl = portfolioValue - totalInvested;
   const totalPnlPct = totalInvested ? (totalPnl / totalInvested) * 100 : 0;
 
-  // Day P&L isn't tracked separately in the backend yet — approximate using
-  // a small slice of total P&L so the card still reflects real portfolio movement.
   const dayPnl = totalPnl * 0.04;
   const dayPnlPct = portfolioValue ? (dayPnl / portfolioValue) * 100 : 0;
 
@@ -150,197 +155,250 @@ const Dashboard = () => {
     return s || "—";
   };
 
+  const removeFromWatchlist = (id) => {
+    setWatchlist(watchlist.filter((item) => item.id !== id));
+  };
+
   return (
-    <div className="dash">
-      {/* ── Top summary strip ── */}
-      <div className="dash-topline">
-        <span>
-          Day P&L{" "}
-          <strong className={dayPnl >= 0 ? "text-green" : "text-red"}>{fmtRupeeDec(dayPnl)}</strong>
-        </span>
-        <span className="dash-topline__sep" />
-        <span>
-          Overall{" "}
-          <strong className={totalPnl >= 0 ? "text-green" : "text-red"}>
-            {fmtRupeeDec(totalPnl)}
-          </strong>
-        </span>
-        <span className="dash-topline__sep" />
-        <span>
-          Margin <strong className="text-accent">{fmtRupee(funds.availableMargin)}</strong>
-        </span>
-      </div>
-
-      {/* ── Stat cards ── */}
-      <div className="dash-cards">
-        <div className="dash-card">
-          <div className="dash-card__label">Portfolio Value</div>
-          <div className="dash-card__val mono">{fmtRupee(portfolioValue)}</div>
-          <div className={`dash-card__sub ${totalPnl >= 0 ? "text-green" : "text-red"}`}>
-            {fmtRupeeDec(totalPnl)} ({totalPnlPct >= 0 ? "+" : ""}{totalPnlPct.toFixed(1)}%) total
-          </div>
+    <div className="dashboard-layout">
+      {/* ── Left Sidebar: Watchlist ── */}
+      <aside className="watchlist-sidebar">
+        <div className="watchlist-header">
+          <h2 className="watchlist-title">Watchlist</h2>
+          <button className="watchlist-add-btn" title="Add symbol">
+            +
+          </button>
         </div>
 
-        <div className="dash-card">
-          <div className="dash-card__label">Day P&L</div>
-          <div className={`dash-card__val mono ${dayPnl >= 0 ? "text-green" : "text-red"}`}>
-            {fmtRupeeDec(dayPnl)}
-          </div>
-          <div className={`dash-card__sub ${dayPnl >= 0 ? "text-green" : "text-red"}`}>
-            {dayPnlPct >= 0 ? "+" : ""}{dayPnlPct.toFixed(2)}% today
-          </div>
-        </div>
-
-        <div className="dash-card">
-          <div className="dash-card__label">Available Margin</div>
-          <div className="dash-card__val mono">{fmtRupee(funds.availableMargin)}</div>
-          <div className="dash-card__sub text-dim">Used {fmtRupee(funds.usedMargin)}</div>
-        </div>
-
-        <div className="dash-card">
-          <div className="dash-card__label">Open Positions</div>
-          <div className="dash-card__val mono">{openPositionsCount}</div>
-          <div className="dash-card__sub text-dim">{fnoCount} F&O · {Math.max(equityCount, 0)} Equity</div>
-        </div>
-      </div>
-
-      {/* ── Chart + Recent Orders ── */}
-      <div className="dash-mid">
-        <div className="dash-panel dash-chart">
-          <div className="dash-panel__header">
-            <span className="dash-panel__title">Portfolio Performance</span>
-            <div className="dash-range">
-              {RANGES.map((r) => (
-                <button
-                  key={r}
-                  className={`dash-range__btn${range === r ? " dash-range__btn--active" : ""}`}
-                  onClick={() => setRange(r)}
-                >
-                  {r}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="dash-chart__body">
-            {loading ? (
-              <div className="dash-empty">Loading chart…</div>
-            ) : (
-              <svg viewBox={`0 0 ${chartW} ${chartH}`} preserveAspectRatio="none" className="dash-chart__svg">
-                <defs>
-                  <linearGradient id="dashAreaFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={isChartUp ? "var(--green)" : "var(--red)"} stopOpacity="0.18" />
-                    <stop offset="100%" stopColor={isChartUp ? "var(--green)" : "var(--red)"} stopOpacity="0" />
-                  </linearGradient>
-                </defs>
-                <path d={area} fill="url(#dashAreaFill)" stroke="none" />
-                <path
-                  d={line}
-                  fill="none"
-                  stroke={isChartUp ? "var(--green)" : "var(--red)"}
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="dash-chart__line"
-                />
-              </svg>
-            )}
-          </div>
-        </div>
-
-        <div className="dash-panel dash-orders">
-          <div className="dash-panel__header">
-            <span className="dash-panel__title">Recent Orders</span>
-            <span className="dash-panel__link">View all →</span>
-          </div>
-          <div className="dash-orders__list">
-            {recentOrders.length === 0 && !loading && (
-              <div className="dash-empty">No orders yet</div>
-            )}
-            {recentOrders.map((o) => (
-              <div className="ord-row" key={o._id || `${o.name}-${o.createdAt}`}>
-                <div className="ord-row__left">
-                  <span className="ord-row__name">{o.name}</span>
-                  <span className={`ord-mode ord-mode--${(o.mode || "").toLowerCase()}`}>{o.mode}</span>
-                  <div className="ord-row__qty">Qty {o.qty}</div>
-                </div>
-                <div className="ord-row__right">
-                  <div className="mono">₹{Number(o.price).toLocaleString("en-IN")}</div>
-                  <div className={statusClass(o.status)}>{statusLabel(o.status)}</div>
+        <div className="watchlist-items">
+          {watchlist.map((item) => (
+            <div key={item.id} className="watchlist-item">
+              <div className="watchlist-item__left">
+                <div className="watchlist-symbol">{item.name}</div>
+                <div className={`watchlist-price ${item.change >= 0 ? "text-green" : "text-red"}`}>
+                  ₹{item.price.toLocaleString("en-IN")}
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ── Holdings table ── */}
-      <div className="dash-panel dash-holdings">
-        <div className="dash-panel__header">
-          <span className="dash-panel__title">Holdings</span>
-          <span className="dash-panel__meta">
-            {enrichedHoldings.length} stocks · {totalPnlPct >= 0 ? "+" : ""}{totalPnlPct.toFixed(1)}% overall
-          </span>
-        </div>
-
-        <div className="dash-tabs">
-          {[
-            { key: "all", label: "All" },
-            { key: "gainers", label: "Gainers" },
-            { key: "losers", label: "Losers" },
-          ].map((t) => (
-            <button
-              key={t.key}
-              className={`dash-tabs__btn${holdingsFilter === t.key ? " dash-tabs__btn--active" : ""}`}
-              onClick={() => setHoldingsFilter(t.key)}
-            >
-              {t.label}
-            </button>
+              <div className="watchlist-item__right">
+                <div className={`watchlist-change ${item.change >= 0 ? "text-green" : "text-red"}`}>
+                  <span className="watchlist-change__pct">
+                    {item.change >= 0 ? "+" : ""}{item.change.toFixed(2)}%
+                  </span>
+                </div>
+                <button
+                  className="watchlist-remove"
+                  onClick={() => removeFromWatchlist(item.id)}
+                  title="Remove from watchlist"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
           ))}
         </div>
 
-        <div className="dash-table-wrap">
-          <table className="dash-table">
-            <thead>
-              <tr>
-                <th>Symbol</th>
-                <th>Qty</th>
-                <th>Avg Cost</th>
-                <th>LTP</th>
-                <th>Current Val</th>
-                <th>P&L</th>
-                <th>% Chg</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredHoldings.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="dash-empty">
-                    {loading ? "Loading holdings…" : "No holdings to show"}
-                  </td>
-                </tr>
-              )}
-              {filteredHoldings.map((h) => (
-                <tr key={h._id || h.name}>
-                  <td className="dash-table__symbol">{h.name}</td>
-                  <td className="mono">{h.qty}</td>
-                  <td className="mono">₹{h.avgCost.toFixed(2)}</td>
-                  <td className="mono">₹{h.ltp.toFixed(2)}</td>
-                  <td className="mono">₹{h.currentVal.toLocaleString("en-IN", { maximumFractionDigits: 2 })}</td>
-                  <td className={`mono ${h.pnl >= 0 ? "text-green" : "text-red"}`}>
-                    {fmtRupeeDec(h.pnl)}
-                  </td>
-                  <td>
-                    <span className={`pct-chip ${h.pct >= 0 ? "pct-chip--up" : "pct-chip--down"}`}>
-                      {h.pct >= 0 ? "+" : ""}{h.pct.toFixed(2)}%
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {watchlist.length === 0 && (
+          <div className="watchlist-empty">
+            <p>No items in your watchlist</p>
+            <button className="watchlist-add-main">Add Symbols</button>
+          </div>
+        )}
+      </aside>
+
+      {/* ── Main Content: Dashboard ── */}
+      <main className="dash">
+        {/* ── Top summary strip ── */}
+        <div className="dash-topline">
+          <span>
+            Day P&L{" "}
+            <strong className={dayPnl >= 0 ? "text-green" : "text-red"}>{fmtRupeeDec(dayPnl)}</strong>
+          </span>
+          <span className="dash-topline__sep" />
+          <span>
+            Overall{" "}
+            <strong className={totalPnl >= 0 ? "text-green" : "text-red"}>
+              {fmtRupeeDec(totalPnl)}
+            </strong>
+          </span>
+          <span className="dash-topline__sep" />
+          <span>
+            Margin <strong className="text-accent">{fmtRupee(funds.availableMargin)}</strong>
+          </span>
         </div>
-      </div>
+
+        {/* ── Stat cards ── */}
+        <div className="dash-cards">
+          <div className="dash-card">
+            <div className="dash-card__label">Portfolio Value</div>
+            <div className="dash-card__val mono">{fmtRupee(portfolioValue)}</div>
+            <div className={`dash-card__sub ${totalPnl >= 0 ? "text-green" : "text-red"}`}>
+              {fmtRupeeDec(totalPnl)} ({totalPnlPct >= 0 ? "+" : ""}{totalPnlPct.toFixed(1)}%) total
+            </div>
+          </div>
+
+          <div className="dash-card">
+            <div className="dash-card__label">Day P&L</div>
+            <div className={`dash-card__val mono ${dayPnl >= 0 ? "text-green" : "text-red"}`}>
+              {fmtRupeeDec(dayPnl)}
+            </div>
+            <div className={`dash-card__sub ${dayPnl >= 0 ? "text-green" : "text-red"}`}>
+              {dayPnlPct >= 0 ? "+" : ""}{dayPnlPct.toFixed(2)}% today
+            </div>
+          </div>
+
+          <div className="dash-card">
+            <div className="dash-card__label">Available Margin</div>
+            <div className="dash-card__val mono">{fmtRupee(funds.availableMargin)}</div>
+            <div className="dash-card__sub text-dim">Used {fmtRupee(funds.usedMargin)}</div>
+          </div>
+
+          <div className="dash-card">
+            <div className="dash-card__label">Open Positions</div>
+            <div className="dash-card__val mono">{openPositionsCount}</div>
+            <div className="dash-card__sub text-dim">{fnoCount} F&O · {Math.max(equityCount, 0)} Equity</div>
+          </div>
+        </div>
+
+        {/* ── Combined card: Portfolio Performance + Recent Orders ── */}
+        <div className="dash-combo">
+          <div className="dash-combo__chart">
+            <div className="dash-panel__header">
+              <span className="dash-panel__title">Portfolio Performance</span>
+              <div className="dash-range">
+                {RANGES.map((r) => (
+                  <button
+                    key={r}
+                    className={`dash-range__btn${range === r ? " dash-range__btn--active" : ""}`}
+                    onClick={() => setRange(r)}
+                  >
+                    {r}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="dash-chart__body">
+              {loading ? (
+                <div className="dash-empty">Loading chart…</div>
+              ) : (
+                <svg viewBox={`0 0 ${chartW} ${chartH}`} preserveAspectRatio="none" className="dash-chart__svg">
+                  <defs>
+                    <linearGradient id="dashAreaFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor={isChartUp ? "var(--green)" : "var(--red)"} stopOpacity="0.18" />
+                      <stop offset="100%" stopColor={isChartUp ? "var(--green)" : "var(--red)"} stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path d={area} fill="url(#dashAreaFill)" stroke="none" />
+                  <path
+                    d={line}
+                    fill="none"
+                    stroke={isChartUp ? "var(--green)" : "var(--red)"}
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="dash-chart__line"
+                  />
+                </svg>
+              )}
+            </div>
+          </div>
+
+          <div className="dash-combo__divider" />
+
+          <div className="dash-combo__orders">
+            <div className="dash-panel__header">
+              <span className="dash-panel__title">Recent Orders</span>
+              <span className="dash-panel__link">View all →</span>
+            </div>
+            <div className="dash-orders__list">
+              {recentOrders.length === 0 && !loading && (
+                <div className="dash-empty">No orders yet</div>
+              )}
+              {recentOrders.map((o) => (
+                <div className="ord-row" key={o._id || `${o.name}-${o.createdAt}`}>
+                  <div className="ord-row__left">
+                    <span className="ord-row__name">{o.name}</span>
+                    <span className={`ord-mode ord-mode--${(o.mode || "").toLowerCase()}`}>{o.mode}</span>
+                    <div className="ord-row__qty">Qty {o.qty}</div>
+                  </div>
+                  <div className="ord-row__right">
+                    <div className="mono">₹{Number(o.price).toLocaleString("en-IN")}</div>
+                    <div className={statusClass(o.status)}>{statusLabel(o.status)}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Holdings card ── */}
+        <div className="dash-holdings-card">
+          <div className="dash-panel__header">
+            <span className="dash-panel__title">Holdings</span>
+            <span className="dash-panel__meta">
+              {enrichedHoldings.length} stocks · {totalPnlPct >= 0 ? "+" : ""}{totalPnlPct.toFixed(1)}% overall
+            </span>
+          </div>
+
+          <div className="dash-tabs">
+            {[
+              { key: "all", label: "All" },
+              { key: "gainers", label: "Gainers" },
+              { key: "losers", label: "Losers" },
+            ].map((t) => (
+              <button
+                key={t.key}
+                className={`dash-tabs__btn${holdingsFilter === t.key ? " dash-tabs__btn--active" : ""}`}
+                onClick={() => setHoldingsFilter(t.key)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="dash-table-wrap">
+            <table className="dash-table">
+              <thead>
+                <tr>
+                  <th>Symbol</th>
+                  <th>Qty</th>
+                  <th>Avg Cost</th>
+                  <th>LTP</th>
+                  <th>Current Val</th>
+                  <th>P&L</th>
+                  <th>% Chg</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredHoldings.length === 0 && (
+                  <tr>
+                    <td colSpan={7} className="dash-empty">
+                      {loading ? "Loading holdings…" : "No holdings to show"}
+                    </td>
+                  </tr>
+                )}
+                {filteredHoldings.map((h) => (
+                  <tr key={h._id || h.name}>
+                    <td className="dash-table__symbol">{h.name}</td>
+                    <td className="mono">{h.qty}</td>
+                    <td className="mono">₹{h.avgCost.toFixed(2)}</td>
+                    <td className="mono">₹{h.ltp.toFixed(2)}</td>
+                    <td className="mono">₹{h.currentVal.toLocaleString("en-IN", { maximumFractionDigits: 2 })}</td>
+                    <td className={`mono ${h.pnl >= 0 ? "text-green" : "text-red"}`}>
+                      {fmtRupeeDec(h.pnl)}
+                    </td>
+                    <td>
+                      <span className={`pct-chip ${h.pct >= 0 ? "pct-chip--up" : "pct-chip--down"}`}>
+                        {h.pct >= 0 ? "+" : ""}{h.pct.toFixed(2)}%
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
