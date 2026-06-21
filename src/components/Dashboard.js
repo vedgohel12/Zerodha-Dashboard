@@ -204,9 +204,9 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* ── Chart + Recent Orders ── */}
-      <div className="dash-mid">
-        <div className="dash-panel dash-chart">
+      {/* ── Combined card: Portfolio Performance + Recent Orders ── */}
+      <div className="dash-combo">
+        <div className="dash-combo__chart">
           <div className="dash-panel__header">
             <span className="dash-panel__title">Portfolio Performance</span>
             <div className="dash-range">
@@ -248,7 +248,9 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="dash-panel dash-orders">
+        <div className="dash-combo__divider" />
+
+        <div className="dash-combo__orders">
           <div className="dash-panel__header">
             <span className="dash-panel__title">Recent Orders</span>
             <span className="dash-panel__link">View all →</span>
@@ -274,8 +276,8 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* ── Holdings table ── */}
-      <div className="dash-panel dash-holdings">
+      {/* ── Holdings card ── */}
+      <div className="dash-holdings-card">
         <div className="dash-panel__header">
           <span className="dash-panel__title">Holdings</span>
           <span className="dash-panel__meta">

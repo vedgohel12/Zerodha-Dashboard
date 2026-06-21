@@ -42,7 +42,7 @@
 .dash-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 16px;
   padding: 16px 18px;
   transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
 }
@@ -74,19 +74,30 @@
   margin-top: 6px;
 }
 
-/* ── Mid section: chart + recent orders ──────────────────── */
-.dash-mid {
+/* ── Combined card: chart + recent orders ────────────────── */
+.dash-combo {
   display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 14px;
+  grid-template-columns: 1fr 1px 340px;
   align-items: stretch;
-}
-
-.dash-panel {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 16px 18px;
+  border-radius: 20px;
+  box-shadow: 0 10px 28px -16px rgba(0,0,0,.14);
+  overflow: hidden;
+  transition: box-shadow .25s ease, transform .25s ease;
+}
+
+.dash-combo:hover {
+  box-shadow: 0 16px 36px -16px rgba(0,0,0,.18);
+}
+
+.dash-combo__chart,
+.dash-combo__orders {
+  padding: 20px 22px;
+}
+
+.dash-combo__divider {
+  background: var(--border);
 }
 
 .dash-panel__header {
@@ -123,7 +134,7 @@
   display: flex;
   gap: 4px;
   background: var(--muted);
-  border-radius: 7px;
+  border-radius: 999px;
   padding: 3px;
 }
 
@@ -133,10 +144,10 @@
   font-size: 11.5px;
   font-weight: 600;
   color: var(--text-dim);
-  padding: 5px 10px;
-  border-radius: 5px;
+  padding: 5px 12px;
+  border-radius: 999px;
   cursor: pointer;
-  transition: background .15s ease, color .15s ease;
+  transition: background .15s ease, color .15s ease, transform .15s ease;
 }
 
 .dash-range__btn:hover {
@@ -146,6 +157,7 @@
 .dash-range__btn--active {
   background: var(--accent);
   color: #fff;
+  box-shadow: 0 3px 10px -4px var(--accent-ring, rgba(37,99,235,.5));
 }
 
 .dash-chart__body {
@@ -174,12 +186,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 9px 4px;
-  border-bottom: 1px solid var(--border);
+  padding: 10px 6px;
+  border-radius: 10px;
+  transition: background .15s ease;
 }
 
-.ord-row:last-child {
-  border-bottom: none;
+.ord-row:hover {
+  background: var(--muted);
 }
 
 .ord-row__left {
@@ -233,10 +246,23 @@
 .ord-status--pending { color: #d97706; }
 .ord-status--rejected { color: var(--red); }
 
-/* ── Holdings panel ──────────────────────────────────────── */
+/* ── Holdings card ────────────────────────────────────────── */
+.dash-holdings-card {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface) 100%);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 22px 24px 8px;
+  box-shadow: 0 10px 28px -16px rgba(0,0,0,.14);
+  transition: box-shadow .25s ease;
+}
+
+.dash-holdings-card:hover {
+  box-shadow: 0 16px 36px -16px rgba(0,0,0,.18);
+}
+
 .dash-tabs {
   display: flex;
-  gap: 18px;
+  gap: 20px;
   border-bottom: 1px solid var(--border);
   margin-bottom: 4px;
 }
@@ -247,7 +273,7 @@
   font-size: 12.5px;
   font-weight: 600;
   color: var(--text-dim);
-  padding: 8px 2px;
+  padding: 9px 2px;
   cursor: pointer;
   position: relative;
   transition: color .15s ease;
@@ -273,6 +299,7 @@
 .dash-table-wrap {
   overflow-x: auto;
   margin-top: 10px;
+  border-radius: 14px;
 }
 
 .dash-table {
@@ -288,20 +315,28 @@
   text-transform: uppercase;
   letter-spacing: .04em;
   color: var(--text-dim);
-  padding: 8px 10px;
+  padding: 10px 12px;
   border-bottom: 1px solid var(--border);
   white-space: nowrap;
 }
 
 .dash-table td {
-  padding: 11px 10px;
+  padding: 13px 12px;
   border-bottom: 1px solid var(--border);
   color: var(--text);
   white-space: nowrap;
 }
 
+.dash-table tbody tr {
+  transition: background .15s ease;
+}
+
 .dash-table tbody tr:hover {
   background: var(--muted);
+}
+
+.dash-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .dash-table__symbol {
@@ -317,8 +352,8 @@
   display: inline-block;
   font-size: 11px;
   font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 20px;
+  padding: 3px 10px;
+  border-radius: 999px;
 }
 
 .pct-chip--up {
@@ -340,8 +375,13 @@
 
 /* ── Responsive ──────────────────────────────────────────── */
 @media (max-width: 1100px) {
-  .dash-mid {
+  .dash-combo {
     grid-template-columns: 1fr;
+  }
+
+  .dash-combo__divider {
+    height: 1px;
+    width: 100%;
   }
 }
 
@@ -361,7 +401,13 @@
     grid-template-columns: 1fr;
   }
 
-  .dash-panel {
-    padding: 14px;
+  .dash-combo__chart,
+  .dash-combo__orders {
+    padding: 16px;
+  }
+
+  .dash-holdings-card {
+    padding: 16px 14px 6px;
+    border-radius: 16px;
   }
 }
