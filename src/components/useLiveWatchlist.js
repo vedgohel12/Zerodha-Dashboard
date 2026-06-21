@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 
 // 🔧 Point this to wherever backend/server.js is running.
-const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || "http://localhost:5050";
+const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || "https://zerodha-backend1-6.onrender.com";
 const POLL_INTERVAL_MS = 5000;
 
 export default function useLiveWatchlist(fallbackData = []) {
