@@ -54,13 +54,19 @@ const Menu = ({ user, indices = [], onOpenWatchlist, watchlistOpen }) => {
         <Link to="/" className="brand">Zerodha</Link>
 
         <div className={`search${searchFocused ? " search--focused" : ""}`}>
-          <span className="search__icon">🔍</span>
+          <span className="search__icon">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="7" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </span>
           <input
             type="text"
             placeholder="Search stocks, ETFs, indices…"
             onFocus={() => setSearchFocused(true)}
             onBlur={() => setSearchFocused(false)}
           />
+          <span className="search__kbd">⌘K</span>
         </div>
 
         <div className="topbar-right">
