@@ -2,11 +2,17 @@
    SettingsPage.css — uses app-wide CSS variables from theme.css
    ============================================================ */
 
+html, body, #root {
+  min-height: 100%;
+  overflow-y: auto !important;
+}
+
 .settings-page {
-  padding: 40px;
+  padding: 56px 40px 40px;
+  padding-top: calc(var(--topbar-h) + var(--nav-h) + 32px);
   max-width: 600px;
   margin: 0 auto;
-  /* NO min-height: 100vh — parent #main handles scroll */
+  box-sizing: border-box;
   background: var(--color-bg-secondary);
   transition: background 0.3s;
 }
@@ -194,8 +200,9 @@
    ============================================================ */
 @media (max-width: 640px) {
   .settings-page {
-    padding: 16px;
-    /* No background override needed — inherits from parent */
+    padding: 18px 16px 24px;
+    padding-top: calc(var(--topbar-h) + 20px);
+    padding-bottom: calc(var(--mob-nav-h) + 24px);
     background: transparent;
   }
 
