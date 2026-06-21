@@ -9,13 +9,63 @@
   z-index: 200;
 }
 #topbar .brand { font-size: 16px; font-weight: 700; color: var(--accent); letter-spacing: -.3px; flex-shrink: 0; }
+
+/* ── Search box ───────────────────────────────────────────── */
 #topbar .search {
   flex: 1; max-width: 340px;
-  background: var(--muted); border: 1px solid var(--border);
-  border-radius: 6px; padding: 6px 10px;
-  display: flex; align-items: center; gap: 6px; color: var(--text-dim);
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 14px;
+  display: flex; align-items: center; gap: 8px;
+  color: var(--text-dim);
+  transition: max-width .25s cubic-bezier(.22,1,.36,1),
+              border-color .2s ease,
+              box-shadow .2s ease,
+              background .2s ease;
 }
-#topbar .search input { background: none; border: none; outline: none; color: var(--text); font: inherit; width: 100%; }
+
+#topbar .search:hover {
+  border-color: var(--text-dim);
+}
+
+#topbar .search--focused {
+  max-width: 420px;
+  background: var(--surface);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-ring, rgba(37,99,235,.15)), 0 4px 14px -6px rgba(0,0,0,.12);
+}
+
+#topbar .search__icon {
+  flex-shrink: 0;
+  font-size: 13px;
+  transition: transform .2s cubic-bezier(.34,1.56,.64,1), opacity .2s ease;
+  opacity: .7;
+}
+
+#topbar .search--focused .search__icon {
+  transform: scale(1.12);
+  opacity: 1;
+}
+
+#topbar .search input {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font: inherit;
+  width: 100%;
+}
+
+#topbar .search input::placeholder {
+  color: var(--text-dim);
+  transition: opacity .2s ease;
+}
+
+#topbar .search--focused input::placeholder {
+  opacity: .55;
+}
+
 .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 14px; }
 .tb-badge { background: var(--muted); border-radius: 20px; padding: 4px 10px; font-size: 11px; font-family: var(--font-mono); white-space: nowrap; }
 .tb-badge .up   { color: var(--green); }
@@ -59,6 +109,14 @@
 
 @media (max-width: 640px) {
   #desktop-nav { display: none; }
+
+  #topbar .search {
+    max-width: none;
+  }
+
+  #topbar .search--focused {
+    max-width: none;
+  }
 
   #mobile-nav {
     display: flex;
