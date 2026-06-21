@@ -6,8 +6,8 @@ import Menu from "./Menu";
 import ProfilePage from "./ProfilePage";
 import SettingsPage from "./SettingsPage";
 
-const LANDING_LOGIN_URL = "http://localhost:3000/login";
-const API_BASE_URL = "http://localhost:5000/api/auth";
+const LANDING_LOGIN_URL = "https://zerodha-frontend-583d-njis4k077-vedgohel12s-projects.vercel.app/login";
+const API_BASE_URL = "https://zerodha-backend-1-cbr6.onrender.com/api/auth";
 
 const Home = () => {
   const [user, setUser] = useState(null);
