@@ -55,7 +55,7 @@ html, body, #root {
     top: var(--topbar-h);
     bottom: var(--mob-nav-h, 56px);
     flex-direction: column;
-    overflow: hidden;
+    overflow: visible;
   }
 
   /* Watchlist slides down from top on mobile */
@@ -76,7 +76,7 @@ html, body, #root {
 
   #main {
     flex: 1;
-    min-height: 0;
+    min-height: calc(100vh - var(--topbar-h) - var(--mob-nav-h) - 20px);
     padding: 10px;
     gap: 10px;
     overflow-y: auto;

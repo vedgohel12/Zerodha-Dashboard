@@ -391,6 +391,8 @@ html, body, #root {
     padding: 24px 16px 32px;
     padding-top: calc(var(--topbar-h) + 36px);
     padding-bottom: calc(var(--mob-nav-h) + 32px);
+    min-height: calc(100vh - var(--topbar-h) - var(--mob-nav-h) - 20px);
+    overflow-y: auto;
   }
 
   /* Hide top header card (avatar + name + email) on mobile */

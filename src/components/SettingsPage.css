@@ -203,6 +203,8 @@ html, body, #root {
     padding: 18px 16px 24px;
     padding-top: calc(var(--topbar-h) + 20px);
     padding-bottom: calc(var(--mob-nav-h) + 24px);
+    min-height: calc(100vh - var(--topbar-h) - var(--mob-nav-h) - 20px);
+    overflow-y: auto;
     background: transparent;
   }
 
