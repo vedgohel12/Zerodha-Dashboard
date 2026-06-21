@@ -17,6 +17,7 @@ const MOB_ICONS = {
   "/holdings": <path d="M3 7h18v12H3zM8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18" />,
   "/positions": <path d="M3 17 9 11l4 4 8-8M16 9h5v5" />,
   "/funds": <><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></>,
+  "/apps": <path d="M4 4h16v16H4z" />,
   "watchlist": null, // handled separately
 };
 
@@ -105,7 +106,7 @@ const Menu = ({ user, indices = [], onOpenWatchlist, watchlistOpen }) => {
 
       {/* ── MOBILE BOTTOM NAV ── */}
       <nav id="mobile-nav">
-        {NAV_LINKS.slice(0, 5).map((link) => (
+        {NAV_LINKS.map((link) => (
           <Link
             key={link.to}
             to={link.to}
