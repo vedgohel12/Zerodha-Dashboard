@@ -388,9 +388,9 @@ html, body, #root {
    ============================================================ */
 @media (max-width: 640px) {
   .profile-page {
-    padding: 18px 16px 24px;
-    padding-top: calc(var(--topbar-h) + 20px);
-    padding-bottom: calc(var(--mob-nav-h) + 24px);
+    padding: 24px 16px 32px;
+    padding-top: calc(var(--topbar-h) + 36px);
+    padding-bottom: calc(var(--mob-nav-h) + 32px);
   }
 
   /* Hide top header card (avatar + name + email) on mobile */
