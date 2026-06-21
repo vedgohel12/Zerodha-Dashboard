@@ -1,0 +1,238 @@
+/* ============================================================
+   ProfilePage.css — uses app-wide CSS variables from theme.css
+   ============================================================ */
+
+.profile-page {
+  padding: 40px;
+  max-width: 680px;
+  margin: 0 auto;
+  /* NO min-height: 100vh — parent #main handles scroll */
+}
+
+/* ── Header card ─────────────────────────────────────────── */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+
+.profile-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.profile-header__name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.profile-header__email {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin: 4px 0 0;
+}
+
+/* ── Tab bar ─────────────────────────────────────────────── */
+.profile-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 28px;
+  background: var(--color-tab-bar, #f3f4f6);
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.profile-tab {
+  flex: 1;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  background: transparent;
+  color: var(--color-text-secondary);
+  transition: all 0.15s;
+}
+
+.profile-tab--active {
+  background: var(--color-bg-primary, #fff);
+  color: var(--color-accent);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Content card ────────────────────────────────────────── */
+.profile-card {
+  background: var(--color-bg-primary, #fff);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 28px;
+}
+
+.profile-section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 24px;
+}
+
+.profile-section-subtitle {
+  font-size: 12px;
+  color: var(--color-text-muted, #9ca3af);
+  margin: -16px 0 24px;
+}
+
+/* ── Two-column grid ─────────────────────────────────────── */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 20px;
+}
+
+.profile-grid__full {
+  grid-column: 1 / -1;
+}
+
+/* ── Form field ──────────────────────────────────────────── */
+.profile-field {
+  margin-bottom: 20px;
+}
+
+.profile-field__label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.profile-field__input,
+.profile-field__select,
+.profile-field__textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary, #fff);
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+
+.profile-field__input:focus,
+.profile-field__select:focus,
+.profile-field__textarea:focus {
+  border-color: var(--color-accent);
+}
+
+.profile-field__input--readonly {
+  color: var(--color-text-muted, #9ca3af);
+  background: var(--color-bg-secondary);
+  cursor: default;
+}
+
+.profile-field__select {
+  cursor: pointer;
+}
+
+.profile-field__textarea {
+  resize: vertical;
+}
+
+/* ── Info hint box ───────────────────────────────────────── */
+.profile-info-box {
+  padding: 12px 16px;
+  background: var(--color-accent-bg, #eff6ff);
+  border: 1px solid var(--color-accent-border, #bfdbfe);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--color-accent-text, #1d4ed8);
+  margin-bottom: 4px;
+}
+
+/* ── Save row ────────────────────────────────────────────── */
+.profile-save-row {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-save-btn {
+  padding: 10px 28px;
+  background: var(--color-accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.profile-save-btn:hover {
+  background: var(--color-accent-hover, #2563eb);
+}
+
+.profile-save-success {
+  font-size: 13px;
+  color: var(--color-success, #16a34a);
+  font-weight: 500;
+}
+
+/* ============================================================
+   MOBILE (≤640px)
+   ============================================================ */
+@media (max-width: 640px) {
+  .profile-page {
+    padding: 16px;
+  }
+
+  /* Hide top header card (avatar + name + email) on mobile */
+  .profile-header {
+    display: none;
+  }
+
+  /* Single column grid on mobile */
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-grid__full {
+    grid-column: 1;
+  }
+
+  .profile-card {
+    padding: 18px;
+  }
+
+  .profile-tabs {
+    margin-bottom: 20px;
+  }
+
+  .profile-tab {
+    font-size: 12px;
+    padding: 8px 6px;
+  }
+}

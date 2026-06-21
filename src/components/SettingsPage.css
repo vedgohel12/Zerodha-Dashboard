@@ -1,0 +1,215 @@
+/* ============================================================
+   SettingsPage.css — uses app-wide CSS variables from theme.css
+   ============================================================ */
+
+.settings-page {
+  padding: 40px;
+  max-width: 600px;
+  margin: 0 auto;
+  /* NO min-height: 100vh — parent #main handles scroll */
+  background: var(--color-bg-secondary);
+  transition: background 0.3s;
+}
+
+.settings-page__heading {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 28px;
+}
+
+/* ── Section title ───────────────────────────────────────── */
+.settings-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 10px;
+}
+
+/* ── Card ────────────────────────────────────────────────── */
+.settings-card {
+  background: var(--color-bg-primary, #fff);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+
+.settings-card--danger {
+  border-color: var(--color-danger-border, #7f1d1d);
+}
+
+/* ── Row ─────────────────────────────────────────────────── */
+.settings-row {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-row-divider, #f3f4f6);
+}
+
+.settings-row--last {
+  border-bottom: none;
+}
+
+.settings-row__spread {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.settings-row__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.settings-row__label--danger {
+  color: var(--color-danger, #dc2626);
+}
+
+.settings-row__desc {
+  font-size: 12px;
+  color: var(--color-text-muted, #9ca3af);
+  margin: 3px 0 0;
+}
+
+.settings-row__value {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+/* ── Toggle ──────────────────────────────────────────────── */
+.settings-toggle {
+  width: 42px;
+  height: 24px;
+  border-radius: 12px;
+  background: var(--color-toggle-off, #475569);
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.settings-toggle--on {
+  background: var(--color-accent);
+}
+
+.settings-toggle__knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.settings-toggle--on .settings-toggle__knob {
+  left: 21px;
+}
+
+/* ── Password fields ─────────────────────────────────────── */
+.settings-pw-field {
+  margin-bottom: 16px;
+}
+
+.settings-pw-field__label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.settings-pw-field__input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary, #fff);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.settings-pw-field__input:focus {
+  border-color: var(--color-accent);
+}
+
+.settings-pw-error {
+  font-size: 12px;
+  color: var(--color-danger, #dc2626);
+  margin: 0 0 12px;
+}
+
+.settings-pw-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.settings-save-success {
+  font-size: 13px;
+  color: var(--color-success, #16a34a);
+  font-weight: 500;
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.settings-btn {
+  padding: 9px 20px;
+  background: var(--color-accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.settings-btn:hover {
+  background: var(--color-accent-hover, #2563eb);
+}
+
+.settings-btn--danger {
+  background: var(--color-danger, #dc2626);
+}
+
+.settings-btn--danger:hover {
+  background: var(--color-danger-hover, #b91c1c);
+}
+
+/* ============================================================
+   MOBILE (≤640px)
+   ============================================================ */
+@media (max-width: 640px) {
+  .settings-page {
+    padding: 16px;
+    /* No background override needed — inherits from parent */
+    background: transparent;
+  }
+
+  .settings-page__heading {
+    font-size: 17px;
+    margin-bottom: 20px;
+  }
+
+  .settings-row {
+    padding: 14px 16px;
+  }
+
+  .settings-btn--danger {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+}

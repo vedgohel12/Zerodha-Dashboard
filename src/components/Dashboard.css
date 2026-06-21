@@ -1,0 +1,80 @@
+html, body { height: 100%; overflow: hidden; }
+
+#shell {
+  position: fixed;
+  top: calc(var(--topbar-h) + var(--nav-h));
+  left: 0; right: 0; bottom: 0;
+  display: flex;
+  overflow: hidden;
+}
+
+#watchlist {
+  width: var(--watch-w, 300px);
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+}
+
+#main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: stretch;
+}
+
+/* ── Laptop large (>1200px) ── */
+@media (min-width: 1201px) {
+  :root { --watch-w: 300px; }
+}
+
+/* ── Laptop medium (901px–1200px) ── */
+@media (max-width: 1200px) {
+  :root { --watch-w: 270px; }
+}
+
+/* ── Tablet (≤900px) ── */
+@media (max-width: 900px) {
+  :root { --watch-w: 230px; }
+}
+
+/* ── Mobile (≤640px) ── */
+@media (max-width: 640px) {
+  :root { --topbar-h: 48px; --nav-h: 0px; }
+
+  #shell {
+    top: var(--topbar-h);
+    bottom: var(--mob-nav-h, 56px);
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Watchlist slides down from top on mobile */
+  #watchlist {
+    width: 100%;
+    flex-shrink: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease;
+  }
+
+  #watchlist.open {
+    max-height: 320px;
+    overflow-y: auto;
+  }
+
+  #main {
+    flex: 1;
+    padding: 10px;
+    gap: 10px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
