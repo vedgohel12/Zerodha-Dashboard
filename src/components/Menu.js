@@ -106,7 +106,8 @@ const Menu = ({ user, indices = [], onOpenWatchlist, watchlistOpen }) => {
 
       {/* ── MOBILE BOTTOM NAV ── */}
       <nav id="mobile-nav">
-        {NAV_LINKS.map((link) => (
+        {/* "Apps" link is intentionally excluded from the mobile bottom nav */}
+        {NAV_LINKS.filter((link) => link.to !== "/apps").map((link) => (
           <Link
             key={link.to}
             to={link.to}
@@ -134,4 +135,4 @@ const Menu = ({ user, indices = [], onOpenWatchlist, watchlistOpen }) => {
   );
 };
 
-export default Menu;  
+export default Menu;
