@@ -45,6 +45,7 @@
 
 .profile-page {
   padding: 40px;
+  padding-top: 90px;
   max-width: 680px;
   margin: 0 auto;
   /* NO min-height: 100vh — parent #main handles scroll */
@@ -383,6 +384,7 @@
 @media (max-width: 640px) {
   .profile-page {
     padding: 16px;
+    padding-top: 70px;
   }
 
   /* Hide top header card (avatar + name + email) on mobile */
