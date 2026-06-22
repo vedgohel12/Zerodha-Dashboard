@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Dashboard    from "./Dashboard";
-import Menu         from "./Menu";
-import Orders       from "./Orders";
-import Holdings     from "./Holdings";
-import Positions    from "./Positions";
-import Funds        from "./Funds";
-import Apps         from "./Apps";
+import Dashboard   from "./Dashboard";
+import Menu        from "./Menu";
+import Orders      from "./Orders";
+import Holdings    from "./Holdings";
+import Positions   from "./Positions";
+import Funds       from "./Funds";
+import Apps        from "./Apps";
 import ProfilePage  from "./ProfilePage";
 import SettingsPage from "./SettingsPage";
 
@@ -19,25 +19,12 @@ const INDICES = [
   { name: "BANK NIFTY", price: "51,820.40", pct: "0.12%", up: false },
 ];
 
-const PageWrap = ({ children }) => (
-  <div style={{
-    position: "absolute",
-    top: 0, left: 0, right: 0, bottom: 0,
-    overflowY: "auto",
-    overflowX: "hidden",
-    padding: "20px 24px 40px",
-    background: "#f4f6f8",
-    WebkitOverflowScrolling: "touch",
-  }}>
-    {children}
-  </div>
-);
-
 const Home = () => {
   const [user, setUser]                   = useState(null);
   const [loading, setLoading]             = useState(true);
   const [watchlistOpen, setWatchlistOpen] = useState(false);
 
+  /* ── auth check ── */
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
@@ -77,6 +64,7 @@ const Home = () => {
 
   return (
     <div className="app-root">
+      {/* Single nav for the whole app */}
       <Menu
         user={user}
         indices={INDICES}
@@ -84,10 +72,13 @@ const Home = () => {
         watchlistOpen={watchlistOpen}
       />
 
+      {/* Page shell — sits below topbar + desktop-nav */}
       <div id="shell">
         <div id="main">
           <Routes>
-            <Route path="/"
+            {/* Dashboard gets watchlist state so it can show/hide sidebar */}
+            <Route
+              index
               element={
                 <Dashboard
                   watchlistOpen={watchlistOpen}
@@ -95,14 +86,20 @@ const Home = () => {
                 />
               }
             />
-            <Route path="/orders"    element={<PageWrap><Orders /></PageWrap>} />
-            <Route path="/holdings"  element={<PageWrap><Holdings /></PageWrap>} />
-            <Route path="/positions" element={<PageWrap><Positions /></PageWrap>} />
-            <Route path="/funds"     element={<PageWrap><Funds /></PageWrap>} />
-            <Route path="/apps"      element={<PageWrap><Apps /></PageWrap>} />
-            <Route path="/profile"   element={<PageWrap><ProfilePage user={user} setUser={setUser} /></PageWrap>} />
-            <Route path="/settings"  element={<PageWrap><SettingsPage user={user} /></PageWrap>} />
-            <Route path="*"          element={<Navigate to="/" replace />} />
+
+            {/* ── All main pages ── */}
+            <Route path="orders"    element={<Orders />} />
+            <Route path="holdings"  element={<Holdings />} />
+            <Route path="positions" element={<Positions />} />
+            <Route path="funds"     element={<Funds />} />
+            <Route path="apps"      element={<Apps />} />
+
+            {/* ── Profile & Settings ── */}
+            <Route path="profile"  element={<ProfilePage  user={user} setUser={setUser} />} />
+            <Route path="settings" element={<SettingsPage user={user} />} />
+
+            {/* ── Catch-all ── */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
       </div>
