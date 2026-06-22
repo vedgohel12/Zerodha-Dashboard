@@ -1,12 +1,14 @@
-/* ═══════════════════════════════════════════════════
-   App Shell Layout
-═══════════════════════════════════════════════════ */
-
 html, body, #root {
   height: 100%;
   overflow: hidden;
   margin: 0;
   padding: 0;
+}
+
+.app-root {
+  height: 100vh;
+  overflow: hidden;
+  background: #f4f6f8;
 }
 
 #shell {
@@ -16,38 +18,25 @@ html, body, #root {
   right: 0;
   bottom: 0;
   display: flex;
-  flex-direction: column;
   overflow: hidden;
-  background: #f4f6f8; /* ✅ hardcoded white-gray, no dark fallback */
+  background: #f4f6f8;
 }
 
 #main {
   flex: 1;
-  overflow-y: auto;   /* ✅ FIXED: was hidden, pages weren't showing */
-  overflow-x: hidden;
+  position: relative;  /* ✅ PageWrap ka position: absolute kaam karega */
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
-#watchlist {
-  display: none;
-}
-
-@media (max-width: 900px) {
-  #shell { position: fixed; }
-}
+#watchlist { display: none; }
 
 @media (max-width: 640px) {
-  :root {
-    --topbar-h: 48px;
-    --nav-h: 0px;
-  }
+  :root { --topbar-h: 48px; --nav-h: 0px; }
   #shell {
     top: var(--topbar-h);
-    bottom: var(--mob-nav-h, 56px);
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    bottom: var(--mob-nav-h, 60px);
   }
-  #main { overflow: visible; }
 }

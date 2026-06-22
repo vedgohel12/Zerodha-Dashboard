@@ -19,15 +19,14 @@ const INDICES = [
   { name: "BANK NIFTY", price: "51,820.40", pct: "0.12%", up: false },
 ];
 
-/* Scrollable wrapper for all pages except Dashboard */
 const PageWrap = ({ children }) => (
   <div style={{
-    flex: 1,
+    position: "absolute",
+    top: 0, left: 0, right: 0, bottom: 0,
     overflowY: "auto",
     overflowX: "hidden",
     padding: "20px 24px 40px",
     background: "#f4f6f8",
-    height: "100%",
     WebkitOverflowScrolling: "touch",
   }}>
     {children}
@@ -88,13 +87,20 @@ const Home = () => {
       <div id="shell">
         <div id="main">
           <Routes>
-            <Route path="/"          element={<Dashboard watchlistOpen={watchlistOpen} setWatchlistOpen={setWatchlistOpen} />} />
+            <Route path="/"
+              element={
+                <Dashboard
+                  watchlistOpen={watchlistOpen}
+                  setWatchlistOpen={setWatchlistOpen}
+                />
+              }
+            />
             <Route path="/orders"    element={<PageWrap><Orders /></PageWrap>} />
             <Route path="/holdings"  element={<PageWrap><Holdings /></PageWrap>} />
             <Route path="/positions" element={<PageWrap><Positions /></PageWrap>} />
             <Route path="/funds"     element={<PageWrap><Funds /></PageWrap>} />
             <Route path="/apps"      element={<PageWrap><Apps /></PageWrap>} />
-            <Route path="/profile"   element={<PageWrap><ProfilePage  user={user} setUser={setUser} /></PageWrap>} />
+            <Route path="/profile"   element={<PageWrap><ProfilePage user={user} setUser={setUser} /></PageWrap>} />
             <Route path="/settings"  element={<PageWrap><SettingsPage user={user} /></PageWrap>} />
             <Route path="*"          element={<Navigate to="/" replace />} />
           </Routes>
