@@ -1,46 +1,44 @@
 /* ═══════════════════════════════════════════════════
-   TradePulse Design Tokens — LIGHT / WHITE theme
+   theme.css — ALL design tokens + layout + shared
+   components for every page
 ═══════════════════════════════════════════════════ */
 
+/* ── Design tokens ── */
 :root {
-  --topbar-h:   52px;
-  --nav-h:      40px;
-  --mob-nav-h:  60px;
-  --watch-w:    280px;
+  --topbar-h:  52px;
+  --nav-h:     40px;
+  --mob-nav-h: 60px;
+  --watch-w:   280px;
 
-  /* ── White background palette ── */
-  --bg:          #f4f6f8;
-  --surface:     #ffffff;
-  --surface2:    #f8fafc;
-  --surface3:    #f1f5f9;
-  --muted:       #f3f4f6;
+  /* White background palette */
+  --bg:        #f4f6f8;
+  --surface:   #ffffff;
+  --surface2:  #f8fafc;
+  --surface3:  #f1f5f9;
+  --muted:     #f3f4f6;
 
-  --border:      #e5e7eb;
-  --border2:     #d1d5db;
+  --border:    #e5e7eb;
+  --border2:   #d1d5db;
 
-  --text:        #111827;
-  --text-dim:    #6b7280;
-  --text-muted:  #9ca3af;
+  --text:      #111827;
+  --text-dim:  #6b7280;
+  --text-muted:#9ca3af;
 
-  /* ── Neutral/dark accent (no blue) ── */
+  /* No blue — dark/black accent */
   --accent:      #111827;
   --accent-dim:  rgba(17,24,39,0.06);
   --accent-ring: rgba(17,24,39,0.10);
 
-  /* ── P&L ── */
-  --green:  #16a34a;
-  --red:    #dc2626;
+  --green: #16a34a;
+  --red:   #dc2626;
 
-  /* ── Typography ── */
   --font-sans: "Inter", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Mono", monospace;
 }
 
-*, *::before, *::after { box-sizing: border-box; }
-
+/* ── Base ── */
 html, body, #root {
   height: 100%;
-  margin: 0; padding: 0;
   overflow: hidden;
   background: var(--bg);
   color: var(--text);
@@ -48,27 +46,21 @@ html, body, #root {
   -webkit-font-smoothing: antialiased;
 }
 
-a { text-decoration: none; color: inherit; }
-button { font-family: inherit; }
-
+/* ── Scrollbars ── */
 ::-webkit-scrollbar       { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
 
-/* ── Utility ── */
-.up   { color: var(--green) !important; }
-.dn   { color: var(--red)   !important; }
-.dim  { color: var(--text-dim) !important; }
-.mono { font-family: var(--font-mono); }
-
-/* ── App wrapper ── */
+/* ══════════════════════════════════════════════
+   APP SHELL
+══════════════════════════════════════════════ */
 .app-root {
   height: 100vh;
   overflow: hidden;
   background: var(--bg);
 }
 
-/* ── Shell below topbar+nav ── */
+/* Sits below topbar + desktop-nav */
 #shell {
   position: fixed;
   top: calc(var(--topbar-h) + var(--nav-h));
@@ -83,17 +75,15 @@ button { font-family: inherit; }
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
-/* ── page-wrap: scrollable container for all non-Dashboard pages ── */
+/* ── page-wrap: scrollable wrapper for Orders/Holdings/Funds/Positions ── */
 .page-wrap {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 20px 24px 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
   background: var(--bg);
   height: 100%;
   -webkit-overflow-scrolling: touch;
@@ -101,7 +91,35 @@ button { font-family: inherit; }
   scrollbar-color: var(--border2) transparent;
 }
 
-/* ── Shared page components (used by Orders, Holdings, Positions, Funds) ── */
+/* ══════════════════════════════════════════════
+   LOADING SCREEN
+══════════════════════════════════════════════ */
+.app-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  height: 100vh;
+  background: var(--bg);
+  color: var(--text-dim);
+  font-size: 13px;
+}
+.app-loading__spinner {
+  width: 26px; height: 26px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--text);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ══════════════════════════════════════════════
+   SHARED PAGE COMPONENTS
+   (cards-row, card, panel, table, badges etc.)
+══════════════════════════════════════════════ */
+
+/* ── Stat cards row ── */
 .cards-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -115,7 +133,6 @@ button { font-family: inherit; }
   border-radius: 10px;
   padding: 16px 18px;
   position: relative;
-  overflow: hidden;
 }
 
 .card .c-label {
@@ -140,6 +157,7 @@ button { font-family: inherit; }
   color: var(--text-dim);
 }
 
+/* ── Panel (white card with header) ── */
 .panel {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -152,7 +170,8 @@ button { font-family: inherit; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 18px;
+  gap: 10px;
+  padding: 12px 18px;
   border-bottom: 1px solid var(--border);
   background: var(--surface2);
 }
@@ -167,7 +186,7 @@ button { font-family: inherit; }
   color: var(--text);
 }
 
-/* ── Table ── */
+/* ── Data table ── */
 .data-table {
   width: 100%;
   border-collapse: collapse;
@@ -185,6 +204,7 @@ button { font-family: inherit; }
   border-bottom: 1px solid var(--border);
   background: var(--surface2);
   white-space: nowrap;
+  user-select: none;
 }
 
 .data-table tbody tr {
@@ -198,11 +218,13 @@ button { font-family: inherit; }
   padding: 11px 16px;
   color: var(--text);
   white-space: nowrap;
+  font-size: 12.5px;
 }
 
 .sym-cell {
   font-weight: 600;
   letter-spacing: 0.02em;
+  color: var(--text);
 }
 
 /* ── Badges ── */
@@ -215,8 +237,8 @@ button { font-family: inherit; }
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
-.badge-buy  { background: rgba(22,163,74,0.1);  color: var(--green); }
-.badge-sell { background: rgba(220,38,38,0.1);  color: var(--red);   }
+.badge-buy  { background: rgba(22,163,74,0.10); color: var(--green); }
+.badge-sell { background: rgba(220,38,38,0.10); color: var(--red);   }
 
 /* ── Filter select ── */
 .filter-select {
@@ -227,8 +249,8 @@ button { font-family: inherit; }
   font-size: 12px;
   padding: 4px 8px;
   font-family: inherit;
-  cursor: pointer;
   outline: none;
+  cursor: pointer;
 }
 
 /* ── Live pill ── */
@@ -244,27 +266,22 @@ button { font-family: inherit; }
   font-weight: 600;
   color: var(--green);
 }
-
 .live-dot {
   width: 6px; height: 6px;
   border-radius: 50%;
   background: var(--green);
   animation: pulse 1.5s ease-in-out infinite;
 }
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.4; }
-}
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.35; } }
 
 /* ── Skeleton loader ── */
 .skeleton {
   display: inline-block;
   height: 12px;
   border-radius: 4px;
-  background: linear-gradient(90deg, var(--border) 25%, var(--surface2) 50%, var(--border) 75%);
+  background: linear-gradient(90deg, var(--border) 25%, var(--surface3) 50%, var(--border) 75%);
   background-size: 200% 100%;
-  animation: shimmer 1.4s infinite;
+  animation: shimmer 1.3s infinite;
 }
 @keyframes shimmer { to { background-position: -200% 0; } }
 
@@ -287,41 +304,33 @@ button { font-family: inherit; }
   font-size: 13px;
 }
 
-/* ── text helpers ── */
+/* ── Global text helpers ── */
 .text-green  { color: var(--green)    !important; }
 .text-red    { color: var(--red)      !important; }
 .text-dim    { color: var(--text-dim) !important; }
-.text-accent { color: var(--accent)   !important; }
+.text-accent { color: var(--text)     !important; }
+.up          { color: var(--green)    !important; }
+.dn          { color: var(--red)      !important; }
+.mono        { font-family: var(--font-mono); }
 
-/* ── Loading screen ── */
-.app-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  height: 100vh;
-  background: var(--bg);
-  color: var(--text-dim);
-  font-size: 14px;
-}
-
-.app-loading__spinner {
-  width: 28px; height: 28px;
-  border: 2px solid var(--border2);
-  border-top-color: var(--text);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ══ Responsive ══ */
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════ */
 @media (max-width: 1200px) { :root { --watch-w: 250px; } }
-@media (max-width: 960px)  { :root { --watch-w: 220px; } .cards-row { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 960px)  {
+  :root { --watch-w: 220px; }
+  .cards-row { grid-template-columns: repeat(2, 1fr); }
+}
 @media (max-width: 640px) {
   :root { --topbar-h: 48px; --nav-h: 0px; }
-  #shell { top: var(--topbar-h); bottom: var(--mob-nav-h); overflow-y: auto; }
-  #main  { overflow: visible; }
+  #shell {
+    top: var(--topbar-h);
+    bottom: var(--mob-nav-h);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  #main { overflow: visible; }
   .page-wrap { padding: 12px 12px 80px; }
   .cards-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .card .c-val { font-size: 16px; }
 }
