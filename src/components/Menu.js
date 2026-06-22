@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./Menu.css";
 
 const NAV_LINKS = [
@@ -18,6 +18,7 @@ const MOB_ICONS = {
   "/positions": <path d="M3 17 9 11l4 4 8-8M16 9h5v5" />,
   "/funds": <><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></>,
   "/apps": <path d="M4 4h16v16H4z" />,
+  "watchlist": null, // handled separately
 };
 
 const LANDING_LOGIN_URL = "http://localhost:3000/login";
@@ -30,8 +31,7 @@ const Menu = ({ user, indices = [], onOpenWatchlist, watchlistOpen }) => {
 
   useEffect(() => {
     const handler = (e) => {
-      if (profileRef.current && !profileRef.current.contains(e.target))
-        setProfileOpen(false);
+      if (profileRef.current && !profileRef.current.contains(e.target)) setProfileOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -47,14 +47,11 @@ const Menu = ({ user, indices = [], onOpenWatchlist, watchlistOpen }) => {
     ? user.fullName.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
     : "U";
 
-  // NavLink needs exact match for "/" so it doesn't stay active on all pages
-  const getNavClass = ({ isActive }) => (isActive ? "active" : "");
-
   return (
     <>
       {/* ── TOP BAR ── */}
       <header id="topbar">
-        <NavLink to="/" className="brand">Zerodha</NavLink>
+        <Link to="/" className="brand">Zerodha</Link>
 
         <div className={`search${searchFocused ? " search--focused" : ""}`}>
           <span className="search__icon">
@@ -82,9 +79,7 @@ const Menu = ({ user, indices = [], onOpenWatchlist, watchlistOpen }) => {
             </div>
           ))}
           <div ref={profileRef} style={{ position: "relative" }}>
-            <button className="avatar" onClick={() => setProfileOpen((p) => !p)}>
-              {initials}
-            </button>
+            <button className="avatar" onClick={() => setProfileOpen((p) => !p)}>{initials}</button>
             {profileOpen && (
               <div className="profile-dropdown">
                 <div className="profile-dropdown-header">
@@ -94,8 +89,8 @@ const Menu = ({ user, indices = [], onOpenWatchlist, watchlistOpen }) => {
                     <p className="profile-dropdown-email">{user?.email || ""}</p>
                   </div>
                 </div>
-                <NavLink to="/profile"  className="menu-row" onClick={() => setProfileOpen(false)}>Profile</NavLink>
-                <NavLink to="/settings" className="menu-row" onClick={() => setProfileOpen(false)}>Settings</NavLink>
+                <Link to="/profile" className="menu-row" onClick={() => setProfileOpen(false)}>Profile</Link>
+                <Link to="/settings" className="menu-row" onClick={() => setProfileOpen(false)}>Settings</Link>
                 <div className="menu-row menu-row--danger" onClick={handleLogout}>Logout</div>
               </div>
             )}
@@ -106,20 +101,16 @@ const Menu = ({ user, indices = [], onOpenWatchlist, watchlistOpen }) => {
       {/* ── DESKTOP HORIZONTAL NAV ── */}
       <nav id="desktop-nav">
         {NAV_LINKS.map((link) => (
-          <NavLink
+          <Link
             key={link.to}
             to={link.to}
-            end={link.to === "/"}        /* exact match only for Dashboard */
-            className={getNavClass}
+            className={location.pathname === link.to ? "active" : ""}
           >
             {link.label}
-          </NavLink>
+          </Link>
         ))}
         <div className="nav-right">
-          <button
-            className={`watch-toggle${watchlistOpen ? " active" : ""}`}
-            onClick={onOpenWatchlist}
-          >
+          <button onClick={onOpenWatchlist} style={{ fontSize: 12, color: "var(--text-dim)" }}>
             ☰ Watchlist
           </button>
         </div>
@@ -127,22 +118,21 @@ const Menu = ({ user, indices = [], onOpenWatchlist, watchlistOpen }) => {
 
       {/* ── MOBILE BOTTOM NAV ── */}
       <nav id="mobile-nav">
-        {NAV_LINKS.map((link) => (
-          <NavLink
+        {/* "Apps" link is intentionally excluded from the mobile bottom nav */}
+        {NAV_LINKS.filter((link) => link.to !== "/apps").map((link) => (
+          <Link
             key={link.to}
             to={link.to}
-            end={link.to === "/"}
-            className={({ isActive }) =>
-              `mob-nav-item${isActive ? " active" : ""}`
-            }
+            className={`mob-nav-item${location.pathname === link.to ? " active" : ""}`}
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               {MOB_ICONS[link.to]}
             </svg>
             {link.label}
-          </NavLink>
+          </Link>
         ))}
 
+        {/* Watchlist toggle button — mobile only */}
         <button
           className={`mob-nav-item mob-nav-watchlist${watchlistOpen ? " active" : ""}`}
           onClick={onOpenWatchlist}
