@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../api";
 import GeneralContext from "./GeneralContext";
@@ -7,10 +6,10 @@ import "./SellActionWindow.css";
 
 const SellActionWindow = ({ uid }) => {
   const [stockQuantity, setStockQuantity] = useState(1);
-  const [stockPrice, setStockPrice] = useState(0.0);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
+  const [stockPrice, setStockPrice]       = useState(0.0);
+  const [submitting, setSubmitting]       = useState(false);
+  const [error, setError]                 = useState(null);
+  const [success, setSuccess]             = useState(false);
 
   const { closeSellWindow } = useContext(GeneralContext);
 
@@ -31,43 +30,25 @@ const SellActionWindow = ({ uid }) => {
 
     setSubmitting(true);
     try {
-      console.log("📤 Sending SELL order:", {
-        name: uid,
-        qty: Number(stockQuantity),
-        price: Number(stockPrice),
-        mode: "SELL",
-      });
-
       const response = await axios.post(`${API_BASE_URL}/newOrder`, {
         name: uid,
-        qty: Number(stockQuantity),
+        qty:   Number(stockQuantity),
         price: Number(stockPrice),
-        mode: "SELL",
+        mode:  "SELL",
       });
-
-      console.log("✅ Order placed successfully!");
-      console.log("💰 Updated Funds:", response.data.funds);
 
       setSuccess(true);
 
-      // Dispatch event to notify Funds component to refresh
-      console.log("📢 Dispatching sellOrderComplete event...");
       window.dispatchEvent(new CustomEvent("sellOrderComplete", {
-        detail: {
-          funds: response.data.funds,
-          orderValue: totalValue,
-        }
+        detail: { funds: response.data.funds, orderValue: totalValue },
       }));
 
-      // Show success message for 2 seconds then close
-      setTimeout(() => {
-        closeSellWindow();
-      }, 1500);
+      setTimeout(() => closeSellWindow(), 2000);
+
     } catch (err) {
-      console.error("❌ Order submission failed:", err);
       setError(
         err.response?.data?.message ||
-        err.response?.data?.error ||
+        err.response?.data?.error   ||
         "Order failed. Please try again."
       );
     } finally {
@@ -75,103 +56,136 @@ const SellActionWindow = ({ uid }) => {
     }
   };
 
-  const handleCancelClick = () => {
-    closeSellWindow();
-  };
-
   return (
-    <div className="container" id="sell-window" draggable="true">
-      <div className="header">
-        <h3>Sell {uid}</h3>
-      </div>
+    <div style={{
+      position: "fixed", inset: 0,
+      background: "rgba(0,0,0,0.45)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      zIndex: 1000,
+    }}>
+      <div style={{
+        background: "#fff", borderRadius: 12, width: 340,
+        boxShadow: "0 8px 32px rgba(0,0,0,0.18)", overflow: "hidden",
+      }}>
 
-      <div className="regular-order">
-        <div className="inputs">
-          <fieldset>
-            <legend>Qty.</legend>
-            <input
-              type="number"
-              name="qty"
-              id="qty"
-              min="1"
-              onChange={(e) => setStockQuantity(e.target.value)}
-              value={stockQuantity}
-              disabled={submitting || success}
-            />
-          </fieldset>
-          <fieldset>
-            <legend>Price</legend>
-            <input
-              type="number"
-              name="price"
-              id="price"
-              step="0.05"
-              min="0"
-              onChange={(e) => setStockPrice(e.target.value)}
-              value={stockPrice}
-              disabled={submitting || success}
-            />
-          </fieldset>
+        {/* Header */}
+        <div style={{
+          background: "#dc2626", color: "#fff",
+          padding: "14px 20px",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+        }}>
+          <span style={{ fontWeight: 700, fontSize: 15 }}>Sell {uid}</span>
+          <button onClick={closeSellWindow} style={{
+            background: "none", border: "none", color: "#fff",
+            fontSize: 20, cursor: "pointer", lineHeight: 1,
+          }}>×</button>
         </div>
-      </div>
 
-      {error && (
-        <div
-          style={{
-            color: "#dc2626",
-            fontSize: "12px",
-            margin: "8px 20px 0 20px",
-            padding: "8px 12px",
-            background: "#fef2f2",
-            border: "1px solid #fecaca",
-            borderRadius: "6px",
-          }}
-        >
-          ⚠ {error}
-        </div>
-      )}
+        <div style={{ padding: "20px" }}>
 
-      {success && (
-        <div
-          style={{
-            color: "#059669",
-            fontSize: "12px",
-            margin: "8px 20px 0 20px",
-            padding: "8px 12px",
-            background: "#f0fdf4",
-            border: "1px solid #86efac",
-            borderRadius: "6px",
-            fontWeight: "500",
-          }}
-        >
-          ✅ Order placed successfully! Funds increased by ₹{totalValue.toFixed(2)}
-        </div>
-      )}
+          {/* Success alert */}
+          {success && (
+            <div style={{
+              background: "#f0fdf4", border: "1px solid #86efac",
+              borderRadius: 8, padding: "14px 16px", marginBottom: 16,
+              display: "flex", alignItems: "center", gap: 10,
+            }}>
+              <span style={{ fontSize: 22 }}>✅</span>
+              <div>
+                <p style={{ fontWeight: 700, color: "#15803d", margin: 0, fontSize: 14 }}>
+                  Sold Successfully!
+                </p>
+                <p style={{ color: "#166534", margin: "2px 0 0", fontSize: 12 }}>
+                  {uid} — Qty {stockQuantity} @ ₹{Number(stockPrice).toLocaleString("en-IN")} · +₹{totalValue.toFixed(2)} added
+                </p>
+              </div>
+            </div>
+          )}
 
-      <div className="buttons">
-        <span>Total Value ₹{totalValue.toFixed(2)}</span>
-        <div>
-          <Link
-            className="btn btn-red"
-            onClick={!submitting && !success ? handleSellClick : undefined}
-            style={{
-              opacity: submitting || success ? 0.6 : 1,
-              pointerEvents: submitting || success ? "none" : "auto",
-              cursor: submitting || success ? "not-allowed" : "pointer",
-            }}
-          >
-            {submitting ? "Processing..." : success ? "Success!" : "Sell"}
-          </Link>
-          <Link 
-            to="" 
-            className="btn btn-grey" 
-            onClick={handleCancelClick}
-            style={{
-              pointerEvents: submitting ? "none" : "auto",
-            }}
-          >
-            Cancel
-          </Link>
+          {/* Error alert */}
+          {error && (
+            <div style={{
+              background: "#fef2f2", border: "1px solid #fecaca",
+              borderRadius: 8, padding: "10px 14px", marginBottom: 16,
+              color: "#dc2626", fontSize: 13,
+            }}>
+              ⚠ {error}
+            </div>
+          )}
+
+          {!success && (
+            <>
+              <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: 11, fontWeight: 600, color: "#6b7280", display: "block", marginBottom: 4 }}>QTY</label>
+                  <input
+                    type="number" min="1" value={stockQuantity}
+                    onChange={(e) => setStockQuantity(e.target.value)}
+                    disabled={submitting}
+                    style={{
+                      width: "100%", padding: "9px 12px", borderRadius: 7,
+                      border: "1px solid #e5e7eb", fontSize: 14,
+                      color: "#111827", outline: "none", boxSizing: "border-box",
+                    }}
+                  />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ fontSize: 11, fontWeight: 600, color: "#6b7280", display: "block", marginBottom: 4 }}>PRICE (₹)</label>
+                  <input
+                    type="number" min="0" step="0.05" value={stockPrice}
+                    onChange={(e) => setStockPrice(e.target.value)}
+                    disabled={submitting}
+                    style={{
+                      width: "100%", padding: "9px 12px", borderRadius: 7,
+                      border: "1px solid #e5e7eb", fontSize: 14,
+                      color: "#111827", outline: "none", boxSizing: "border-box",
+                    }}
+                  />
+                </div>
+              </div>
+
+              <p style={{ fontSize: 12, color: "#6b7280", marginBottom: 16 }}>
+                Total value: <strong style={{ color: "#111827" }}>₹{totalValue.toFixed(2)}</strong>
+              </p>
+
+              <div style={{ display: "flex", gap: 10 }}>
+                <button
+                  onClick={handleSellClick}
+                  disabled={submitting}
+                  style={{
+                    flex: 1, padding: "11px", borderRadius: 8, border: "none",
+                    background: submitting ? "#fca5a5" : "#dc2626",
+                    color: "#fff", fontWeight: 700, fontSize: 14, cursor: submitting ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {submitting ? "Processing..." : "Sell"}
+                </button>
+                <button
+                  onClick={closeSellWindow}
+                  style={{
+                    flex: 1, padding: "11px", borderRadius: 8,
+                    border: "1px solid #e5e7eb", background: "#f9fafb",
+                    color: "#374151", fontWeight: 600, fontSize: 14, cursor: "pointer",
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </>
+          )}
+
+          {success && (
+            <button
+              onClick={closeSellWindow}
+              style={{
+                width: "100%", padding: "11px", borderRadius: 8, border: "none",
+                background: "#16a34a", color: "#fff",
+                fontWeight: 700, fontSize: 14, cursor: "pointer",
+              }}
+            >
+              Done
+            </button>
+          )}
         </div>
       </div>
     </div>
