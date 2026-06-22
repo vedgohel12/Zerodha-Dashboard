@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Dashboard   from "./Dashboard";
-import Menu        from "./Menu";
-import Orders      from "./Orders";
-import Holdings    from "./Holdings";
-import Positions   from "./Positions";
-import Funds       from "./Funds";
-import Apps        from "./Apps";
+import Dashboard    from "./Dashboard";
+import Menu         from "./Menu";
+import Orders       from "./Orders";
+import Holdings     from "./Holdings";
+import Positions    from "./Positions";
+import Funds        from "./Funds";
+import Apps         from "./Apps";
 import ProfilePage  from "./ProfilePage";
 import SettingsPage from "./SettingsPage";
 
@@ -24,7 +24,6 @@ const Home = () => {
   const [loading, setLoading]             = useState(true);
   const [watchlistOpen, setWatchlistOpen] = useState(false);
 
-  /* ── auth check ── */
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
@@ -64,7 +63,6 @@ const Home = () => {
 
   return (
     <div className="app-root">
-      {/* Single nav for the whole app */}
       <Menu
         user={user}
         indices={INDICES}
@@ -72,34 +70,19 @@ const Home = () => {
         watchlistOpen={watchlistOpen}
       />
 
-      {/* Page shell — sits below topbar + desktop-nav */}
       <div id="shell">
         <div id="main">
           <Routes>
-            {/* Dashboard gets watchlist state so it can show/hide sidebar */}
-            <Route
-              index
-              element={
-                <Dashboard
-                  watchlistOpen={watchlistOpen}
-                  setWatchlistOpen={setWatchlistOpen}
-                />
-              }
-            />
-
-            {/* ── All main pages ── */}
-            <Route path="orders"    element={<Orders />} />
-            <Route path="holdings"  element={<Holdings />} />
-            <Route path="positions" element={<Positions />} />
-            <Route path="funds"     element={<Funds />} />
-            <Route path="apps"      element={<Apps />} />
-
-            {/* ── Profile & Settings ── */}
-            <Route path="profile"  element={<ProfilePage  user={user} setUser={setUser} />} />
-            <Route path="settings" element={<SettingsPage user={user} />} />
-
-            {/* ── Catch-all ── */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {/* ── absolute paths because index.js uses path="/*" ── */}
+            <Route path="/"          element={<Dashboard watchlistOpen={watchlistOpen} setWatchlistOpen={setWatchlistOpen} />} />
+            <Route path="/orders"    element={<div className="page-wrap"><Orders /></div>} />
+            <Route path="/holdings"  element={<div className="page-wrap"><Holdings /></div>} />
+            <Route path="/positions" element={<div className="page-wrap"><Positions /></div>} />
+            <Route path="/funds"     element={<div className="page-wrap"><Funds /></div>} />
+            <Route path="/apps"      element={<div className="page-wrap"><Apps /></div>} />
+            <Route path="/profile"   element={<div className="page-wrap"><ProfilePage  user={user} setUser={setUser} /></div>} />
+            <Route path="/settings"  element={<div className="page-wrap"><SettingsPage user={user} /></div>} />
+            <Route path="*"          element={<Navigate to="/" replace />} />
           </Routes>
         </div>
       </div>

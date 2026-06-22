@@ -1,19 +1,18 @@
 /* ═══════════════════════════════════════════════════
-   TradePulse Design Tokens — WHITE theme
-   (replaces blue accent with clean white/neutral)
+   TradePulse Design Tokens — LIGHT / WHITE theme
 ═══════════════════════════════════════════════════ */
 
 :root {
-  /* ── Layout heights ── */
   --topbar-h:   52px;
   --nav-h:      40px;
   --mob-nav-h:  60px;
+  --watch-w:    280px;
 
-  /* ── Palette: light background, crisp white surfaces ── */
-  --bg:          #ffffff;
+  /* ── White background palette ── */
+  --bg:          #f4f6f8;
   --surface:     #ffffff;
   --surface2:    #f8fafc;
-  --surface3:    #eef2ff;
+  --surface3:    #f1f5f9;
   --muted:       #f3f4f6;
 
   --border:      #e5e7eb;
@@ -21,32 +20,27 @@
 
   --text:        #111827;
   --text-dim:    #6b7280;
-  --text-muted:  #475569;
+  --text-muted:  #9ca3af;
 
-  /* ── Accent colors ── */
-  --accent:      #2563eb;
-  --accent-dim:  rgba(37,99,235,0.08);
-  --accent-ring: rgba(37,99,235,0.12);
+  /* ── Neutral/dark accent (no blue) ── */
+  --accent:      #111827;
+  --accent-dim:  rgba(17,24,39,0.06);
+  --accent-ring: rgba(17,24,39,0.10);
 
-  /* ── P&L colors ── */
-  --green:       #22c55e;
-  --red:         #ef4444;
+  /* ── P&L ── */
+  --green:  #16a34a;
+  --red:    #dc2626;
 
   /* ── Typography ── */
-  --font-sans:  "Inter", "Segoe UI", system-ui, sans-serif;
-  --font-mono:  "JetBrains Mono", "Fira Mono", "Courier New", monospace;
-
-  /* ── Watchlist sidebar width ── */
-  --watch-w: 280px;
+  --font-sans: "Inter", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Mono", monospace;
 }
 
-/* ── Base reset ── */
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body, #root {
   height: 100%;
-  margin: 0;
-  padding: 0;
+  margin: 0; padding: 0;
   overflow: hidden;
   background: var(--bg);
   color: var(--text);
@@ -57,25 +51,24 @@ html, body, #root {
 a { text-decoration: none; color: inherit; }
 button { font-family: inherit; }
 
-/* ── Scrollbar styling ── */
 ::-webkit-scrollbar       { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
 
-/* ── Global utility classes ── */
+/* ── Utility ── */
 .up   { color: var(--green) !important; }
 .dn   { color: var(--red)   !important; }
 .dim  { color: var(--text-dim) !important; }
 .mono { font-family: var(--font-mono); }
 
-/* ── App root wrapper ── */
+/* ── App wrapper ── */
 .app-root {
   height: 100vh;
   overflow: hidden;
   background: var(--bg);
 }
 
-/* ── Shell: sits below topbar + nav ── */
+/* ── Shell below topbar+nav ── */
 #shell {
   position: fixed;
   top: calc(var(--topbar-h) + var(--nav-h));
@@ -92,6 +85,214 @@ button { font-family: inherit; }
   flex-direction: column;
 }
 
+/* ── page-wrap: scrollable container for all non-Dashboard pages ── */
+.page-wrap {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px 24px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--bg);
+  height: 100%;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border2) transparent;
+}
+
+/* ── Shared page components (used by Orders, Holdings, Positions, Funds) ── */
+.cards-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card .c-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.card .c-val {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.card .c-sub {
+  font-size: 11px;
+  margin-top: 4px;
+  color: var(--text-dim);
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+
+.panel-body {
+  padding: 16px 18px;
+}
+
+.p-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* ── Table ── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.data-table thead th {
+  text-align: left;
+  padding: 10px 16px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+  white-space: nowrap;
+}
+
+.data-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+.data-table tbody tr:last-child { border-bottom: none; }
+.data-table tbody tr:hover { background: var(--surface2); }
+
+.data-table td {
+  padding: 11px 16px;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.sym-cell {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* ── Badges ── */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.badge-buy  { background: rgba(22,163,74,0.1);  color: var(--green); }
+.badge-sell { background: rgba(220,38,38,0.1);  color: var(--red);   }
+
+/* ── Filter select ── */
+.filter-select {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 12px;
+  padding: 4px 8px;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+}
+
+/* ── Live pill ── */
+.live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(22,163,74,0.08);
+  border: 1px solid rgba(22,163,74,0.2);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--green);
+}
+
+.live-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ── Skeleton loader ── */
+.skeleton {
+  display: inline-block;
+  height: 12px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--border) 25%, var(--surface2) 50%, var(--border) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+/* ── Error banner ── */
+.error-banner {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  color: var(--red);
+  padding: 10px 14px;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+/* ── Empty state ── */
+.empty-state {
+  text-align: center;
+  padding: 32px 20px;
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+/* ── text helpers ── */
+.text-green  { color: var(--green)    !important; }
+.text-red    { color: var(--red)      !important; }
+.text-dim    { color: var(--text-dim) !important; }
+.text-accent { color: var(--accent)   !important; }
+
 /* ── Loading screen ── */
 .app-loading {
   display: flex;
@@ -103,41 +304,24 @@ button { font-family: inherit; }
   background: var(--bg);
   color: var(--text-dim);
   font-size: 14px;
-  font-family: var(--font-sans);
 }
 
 .app-loading__spinner {
-  width: 28px;
-  height: 28px;
+  width: 28px; height: 28px;
   border: 2px solid var(--border2);
-  border-top-color: var(--accent);
+  border-top-color: var(--text);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
-
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ══ Tablet ══ */
-@media (max-width: 1200px) {
-  :root { --watch-w: 250px; }
-}
-@media (max-width: 960px) {
-  :root { --watch-w: 220px; }
-}
-
-/* ══ Mobile ══ */
+/* ══ Responsive ══ */
+@media (max-width: 1200px) { :root { --watch-w: 250px; } }
+@media (max-width: 960px)  { :root { --watch-w: 220px; } .cards-row { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 640px) {
-  :root {
-    --topbar-h:  48px;
-    --nav-h:     0px;
-  }
-
-  #shell {
-    top: var(--topbar-h);
-    bottom: var(--mob-nav-h);
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  #main { overflow: visible; }
+  :root { --topbar-h: 48px; --nav-h: 0px; }
+  #shell { top: var(--topbar-h); bottom: var(--mob-nav-h); overflow-y: auto; }
+  #main  { overflow: visible; }
+  .page-wrap { padding: 12px 12px 80px; }
+  .cards-row { grid-template-columns: 1fr 1fr; gap: 8px; }
 }
