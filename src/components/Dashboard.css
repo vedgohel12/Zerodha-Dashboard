@@ -7,7 +7,6 @@
 :root {
   --green:      #22c55e;
   --red:        #ef4444;
-  --accent:     #3b82f6;
   --bg:         #0d0f14;
   --surface:    #13161e;
   --surface2:   #1a1d27;
@@ -285,7 +284,7 @@
 }
 .db-card:hover { border-color: var(--border2); }
 .db-card--action { cursor: pointer; }
-.db-card--action:hover { border-color: var(--accent); }
+.db-card--action:hover { border-color: rgba(255,255,255,0.3); }
 
 .db-card__label {
   font-size: 10px;
@@ -363,7 +362,7 @@
   margin-left: auto;
   background: none;
   border: none;
-  color: var(--accent);
+  color: var(--text);
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
@@ -509,7 +508,7 @@
   transition: all 0.12s;
 }
 .db-tab:hover { color: var(--text); border-color: var(--text-dim); }
-.db-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.db-tab.active { background: var(--text); border-color: var(--text); color: #0c0e14; }
 
 .db-table-wrap {
   overflow-x: auto;
@@ -584,7 +583,7 @@
 .db-link-btn {
   background: none;
   border: none;
-  color: var(--accent);
+  color: var(--text);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
