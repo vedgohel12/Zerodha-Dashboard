@@ -1,0 +1,63 @@
+/* ═══════════════════════════════════════════════════
+   App Shell Layout
+   Topbar + Nav sit above; #shell holds page content
+═══════════════════════════════════════════════════ */
+
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* The outer shell sits below the topbar + nav */
+#shell {
+  position: fixed;
+  top: calc(var(--topbar-h, 52px) + var(--nav-h, 40px));
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg); /* ✅ FIXED: was #0d0f14 (dark), now white from theme.css */
+}
+
+/* #main is the scrollable content area */
+#main {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Legacy — no longer used */
+#watchlist {
+  display: none;
+}
+
+/* ══ Tablet ══ */
+@media (max-width: 900px) {
+  #shell {
+    position: fixed;
+  }
+}
+
+/* ══ Mobile ══ */
+@media (max-width: 640px) {
+  :root {
+    --topbar-h: 48px;
+    --nav-h: 0px;
+  }
+
+  #shell {
+    top: var(--topbar-h);
+    bottom: var(--mob-nav-h, 56px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #main {
+    overflow: visible;
+  }
+}

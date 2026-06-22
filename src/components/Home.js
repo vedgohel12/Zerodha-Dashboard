@@ -73,7 +73,6 @@ const Home = () => {
       <div id="shell">
         <div id="main">
           <Routes>
-            {/* ── absolute paths because index.js uses path="/*" ── */}
             <Route path="/"          element={<Dashboard watchlistOpen={watchlistOpen} setWatchlistOpen={setWatchlistOpen} />} />
             <Route path="/orders"    element={<div className="page-wrap"><Orders /></div>} />
             <Route path="/holdings"  element={<div className="page-wrap"><Holdings /></div>} />
