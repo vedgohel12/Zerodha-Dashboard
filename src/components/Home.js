@@ -19,6 +19,21 @@ const INDICES = [
   { name: "BANK NIFTY", price: "51,820.40", pct: "0.12%", up: false },
 ];
 
+/* Scrollable wrapper for all pages except Dashboard */
+const PageWrap = ({ children }) => (
+  <div style={{
+    flex: 1,
+    overflowY: "auto",
+    overflowX: "hidden",
+    padding: "20px 24px 40px",
+    background: "#f4f6f8",
+    height: "100%",
+    WebkitOverflowScrolling: "touch",
+  }}>
+    {children}
+  </div>
+);
+
 const Home = () => {
   const [user, setUser]                   = useState(null);
   const [loading, setLoading]             = useState(true);
@@ -74,13 +89,13 @@ const Home = () => {
         <div id="main">
           <Routes>
             <Route path="/"          element={<Dashboard watchlistOpen={watchlistOpen} setWatchlistOpen={setWatchlistOpen} />} />
-            <Route path="/orders"    element={<div className="page-wrap"><Orders /></div>} />
-            <Route path="/holdings"  element={<div className="page-wrap"><Holdings /></div>} />
-            <Route path="/positions" element={<div className="page-wrap"><Positions /></div>} />
-            <Route path="/funds"     element={<div className="page-wrap"><Funds /></div>} />
-            <Route path="/apps"      element={<div className="page-wrap"><Apps /></div>} />
-            <Route path="/profile"   element={<div className="page-wrap"><ProfilePage  user={user} setUser={setUser} /></div>} />
-            <Route path="/settings"  element={<div className="page-wrap"><SettingsPage user={user} /></div>} />
+            <Route path="/orders"    element={<PageWrap><Orders /></PageWrap>} />
+            <Route path="/holdings"  element={<PageWrap><Holdings /></PageWrap>} />
+            <Route path="/positions" element={<PageWrap><Positions /></PageWrap>} />
+            <Route path="/funds"     element={<PageWrap><Funds /></PageWrap>} />
+            <Route path="/apps"      element={<PageWrap><Apps /></PageWrap>} />
+            <Route path="/profile"   element={<PageWrap><ProfilePage  user={user} setUser={setUser} /></PageWrap>} />
+            <Route path="/settings"  element={<PageWrap><SettingsPage user={user} /></PageWrap>} />
             <Route path="*"          element={<Navigate to="/" replace />} />
           </Routes>
         </div>
