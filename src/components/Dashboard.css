@@ -5,17 +5,17 @@
 
 /* ── Color tokens (override if your global vars differ) ── */
 :root {
-  --green:      #22c55e;
-  --red:        #ef4444;
-  --bg:         #0d0f14;
-  --surface:    #13161e;
-  --surface2:   #1a1d27;
-  --surface3:   #21263a;
-  --border:     #232738;
-  --border2:    #2d3148;
-  --text:       #e2e8f0;
-  --text-dim:   #64748b;
-  --text-muted: #3d4460;
+  --green:      #16a34a;
+  --red:        #dc2626;
+  --bg:         #ffffff;
+  --surface:    #ffffff;
+  --surface2:   #f8fafc;
+  --surface3:   #eef2ff;
+  --border:     #e5e7eb;
+  --border2:    #d1d5db;
+  --text:       #111827;
+  --text-dim:   #6b7280;
+  --text-muted: #475569;
   --watch-w:    280px;
 }
 

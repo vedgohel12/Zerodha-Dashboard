@@ -78,7 +78,7 @@ const Home = () => {
           <Routes>
             {/* Dashboard gets watchlist state so it can show/hide sidebar */}
             <Route
-              path="/"
+              index
               element={
                 <Dashboard
                   watchlistOpen={watchlistOpen}
@@ -88,15 +88,15 @@ const Home = () => {
             />
 
             {/* ── All main pages ── */}
-            <Route path="/orders"    element={<Orders />} />
-            <Route path="/holdings"  element={<Holdings />} />
-            <Route path="/positions" element={<Positions />} />
-            <Route path="/funds"     element={<Funds />} />
-            <Route path="/apps"      element={<Apps />} />
+            <Route path="orders"    element={<Orders />} />
+            <Route path="holdings"  element={<Holdings />} />
+            <Route path="positions" element={<Positions />} />
+            <Route path="funds"     element={<Funds />} />
+            <Route path="apps"      element={<Apps />} />
 
             {/* ── Profile & Settings ── */}
-            <Route path="/profile"  element={<ProfilePage  user={user} setUser={setUser} />} />
-            <Route path="/settings" element={<SettingsPage user={user} />} />
+            <Route path="profile"  element={<ProfilePage  user={user} setUser={setUser} />} />
+            <Route path="settings" element={<SettingsPage user={user} />} />
 
             {/* ── Catch-all ── */}
             <Route path="*" element={<Navigate to="/" replace />} />

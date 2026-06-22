@@ -137,7 +137,7 @@
 /* Active nav item — white underline style instead of blue bg */
 #desktop-nav a.active {
   color: var(--text);
-  background: rgba(255,255,255,0.06);
+  background: rgba(37,99,235,0.08);
   position: relative;
 }
 #desktop-nav a.active::after {
@@ -145,7 +145,7 @@
   position: absolute;
   bottom: -1px; left: 13px; right: 13px;
   height: 2px;
-  background: var(--text);
+  background: var(--accent);
   border-radius: 2px 2px 0 0;
 }
 
@@ -165,7 +165,7 @@
   transition: color .15s, border-color .15s;
 }
 .watch-toggle:hover,
-.watch-toggle.active { color: var(--text); border-color: rgba(255,255,255,0.3); }
+.watch-toggle.active { color: var(--text); border-color: var(--accent); }
 
 /* ── Profile dropdown ── */
 .profile-dropdown {

@@ -9,24 +9,24 @@
   --nav-h:      40px;
   --mob-nav-h:  60px;
 
-  /* ── Palette: dark background, WHITE accent ── */
-  --bg:          #0c0e14;
-  --surface:     #12151d;
-  --surface2:    #181b25;
-  --surface3:    #1e2230;
-  --muted:       #1a1d28;
+  /* ── Palette: light background, crisp white surfaces ── */
+  --bg:          #ffffff;
+  --surface:     #ffffff;
+  --surface2:    #f8fafc;
+  --surface3:    #eef2ff;
+  --muted:       #f3f4f6;
 
-  --border:      #21253a;
-  --border2:     #2a2f48;
+  --border:      #e5e7eb;
+  --border2:     #d1d5db;
 
-  --text:        #f0f2f8;
-  --text-dim:    #5a6280;
-  --text-muted:  #363c58;
+  --text:        #111827;
+  --text-dim:    #6b7280;
+  --text-muted:  #475569;
 
-  /* ── WHITE accent (replaces blue) ── */
-  --accent:      #ffffff;
-  --accent-dim:  rgba(255,255,255,0.08);
-  --accent-ring: rgba(255,255,255,0.12);
+  /* ── Accent colors ── */
+  --accent:      #2563eb;
+  --accent-dim:  rgba(37,99,235,0.08);
+  --accent-ring: rgba(37,99,235,0.12);
 
   /* ── P&L colors ── */
   --green:       #22c55e;
